@@ -41,29 +41,34 @@ class ChatLLM(gui.CTk):
         self.geometry('800x600')
         self.resizable(True, True)
 
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+
         self._init_side_panel()
         self._init_chat()
 
     def _init_side_panel(self):
         self.side_panel_frame = gui.CTkFrame(self)
-        self.side_panel_frame.grid(row=0, column=0, padx=20, pady=20, sticky='ns', rowspan=2)
+        self.side_panel_frame.grid(row=0, column=0, padx=20, pady=20, sticky='nsw', rowspan=2)
 
         self.model_box = gui.CTkComboBox(self.side_panel_frame, values=Model.get_models(), command=self.select_model_cb)
         self.model_box.grid(row=0, column=0, padx=20, pady=20)
 
     def _init_chat(self):
         self.chat_frame = gui.CTkFrame(self)
-        self.chat_frame.grid(row=0, column=1, padx=20, pady=20, stick='we')
+        self.chat_frame.grid(row=0, column=1, padx=(0, 20), pady=20, stick='nswe')
+        self.chat_frame.rowconfigure(0, weight=1)
+        self.chat_frame.columnconfigure(0, weight=1)
 
         self.answer_entry = gui.CTkEntry(self.chat_frame)
-        self.answer_entry.grid(row=1, column=0, padx=(20, 0), pady=20)
+        self.answer_entry.grid(row=1, column=0, padx=(20, 0), pady=20, stick='we')
 
         self.answer_go = gui.CTkButton(self.chat_frame, text='>', width=28, command=self.answer_cb)
-        self.answer_go.grid(row=1, column=1, padx=(0, 20), pady=20, stick='we')
+        self.answer_go.grid(row=1, column=1, padx=(10, 20), pady=20)
 
         self.chat_textbox = gui.CTkTextbox(self.chat_frame)
         self.chat_textbox.configure(state='disabled')
-        self.chat_textbox.grid(row=0, column=0, padx=20, pady=20, columnspan=2, stick='we')
+        self.chat_textbox.grid(row=0, column=0, padx=20, pady=(20, 0), columnspan=2, stick='nswe')
 
     def select_model_cb(self, name):
         print(name)
