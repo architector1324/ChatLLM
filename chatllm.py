@@ -54,6 +54,9 @@ class ChatLLM(gui.CTk):
         self.model_box = gui.CTkComboBox(self.side_panel_frame, values=Model.get_models(), command=self.select_model_cb)
         self.model_box.grid(row=0, column=0, padx=20, pady=20)
 
+        self.theme_box = gui.CTkComboBox(self.side_panel_frame, values=['dark', 'light'], command=self.select_theme_cb)
+        self.theme_box.grid(row=1, column=0, padx=20, pady=(0, 20))
+
     def _init_chat(self):
         self.chat_frame = gui.CTkFrame(self)
         self.chat_frame.grid(row=0, column=1, padx=(0, 20), pady=20, stick='nswe')
@@ -76,10 +79,15 @@ class ChatLLM(gui.CTk):
         # suggestions = self.model.generate_suggestions()
         # print(suggestions)
 
+    def select_theme_cb(self, theme):
+        print(theme)
+        self.settings['theme'] = theme
+        gui.set_appearance_mode(theme)
+
     def update_chat(self):
         self.chat_textbox.configure(state='normal')
         self.chat_textbox.delete('0.0', 'end')
-        self.chat_textbox.insert('0.0', '\n'.join(self.chat))
+        self.chat_textbox.insert('0.0', '\n'.join([f'{e["who"]}: {e["msg"]}\n' for e in self.chat]))
         self.chat_textbox.configure(state='disabled')
         self.update()
 
@@ -87,12 +95,12 @@ class ChatLLM(gui.CTk):
         prompt = self.answer_entry.get()
         self.answer_entry.delete(0, 'end')
 
-        self.chat.append(prompt)
+        self.chat.append({'who': 'user', 'msg': prompt})
         self.update_chat()
 
-        self.chat.append('')
+        self.chat.append({'who': 'ai', 'msg': ''})
         for t in self.model.answer_stream(prompt):
-            self.chat[-1] += t['response']
+            self.chat[-1]['msg'] += t['response']
             self.update_chat()
 
 
