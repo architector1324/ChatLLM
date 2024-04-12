@@ -163,10 +163,10 @@ class Model:
         res = ollama.generate(model=self.name, prompt=Model.PROMPTS_SUGGESTION[self.lang])['response']
         return json.loads(res)
 
-    def answer(self, prompt):
+    def prompt(self, prompt):
         return ollama.generate(model=self.name, prompt=prompt)['response']
 
-    def answer_stream(self, prompt):
+    def prompt_stream(self, prompt):
         return ollama.generate(model=self.name, prompt=prompt, stream=True)
 
 
@@ -176,6 +176,7 @@ class ChatLLM(gui.CTk):
 
         self.settings = settings
         self.chat = []
+        self.chat_entries = []
         self.model = None
 
         self.title('ChatLLM')
@@ -215,24 +216,32 @@ class ChatLLM(gui.CTk):
         self.chat_main_frame.rowconfigure(0, weight=1)
         self.chat_main_frame.columnconfigure(0, weight=1)
 
-        self.answer_entry = gui.CTkEntry(self.chat_main_frame, corner_radius=20)
-        self.answer_entry.grid(row=1, column=0, padx=(20, 0), pady=20, stick='we')
+        self.prompt_entry = gui.CTkEntry(self.chat_main_frame, corner_radius=20)
+        self.prompt_entry.grid(row=1, column=0, padx=(20, 0), pady=20, stick='we')
 
-        self.answer_go = gui.CTkButton(self.chat_main_frame, text='Go', width=40, command=self.answer_cb)
-        self.answer_go.grid(row=1, column=1, padx=(10, 20), pady=20)
+        self.prompt_go = gui.CTkButton(self.chat_main_frame, text='Go', width=40, command=self.prompt_cb)
+        self.prompt_go.grid(row=1, column=1, padx=(10, 20), pady=20)
 
-        self.chat_frame = gui.CTkFrame(self.chat_main_frame)
+        self.chat_frame = gui.CTkScrollableFrame(self.chat_main_frame)
         self.chat_frame.grid(row=0, column=0, padx=20, pady=(20, 0), columnspan=2, stick='nswe')
         self.chat_frame.rowconfigure(0, weight=1)
         self.chat_frame.rowconfigure(1, weight=1)
         self.chat_frame.columnconfigure(0, weight=1)
         self.chat_frame.columnconfigure(1, weight=1)
 
+        self.suggestions_frame = gui.CTkFrame(self.chat_main_frame)
+        self.suggestions_frame.grid(row=0, column=0, padx=20, pady=(20, 0), columnspan=2, stick='nswe')
+        self.suggestions_frame.rowconfigure(0, weight=1)
+        self.suggestions_frame.rowconfigure(1, weight=1)
+        self.suggestions_frame.columnconfigure(0, weight=1)
+        self.suggestions_frame.columnconfigure(1, weight=1)
+
     def load_model_cb(self, name):
         print(name)
         self.model = Model(name, settings['lang'])
 
-        if (self.chat_frame is None) or self.chat:
+        if self.chat:
+            self.suggestions_frame.grid_remove()
             return
 
         suggestions = self.model.generate_suggestions() if self.settings['generate suggestions'] else random.sample(BUILTIN_SUGGESTIONS[self.model.lang], 4)
@@ -241,14 +250,14 @@ class ChatLLM(gui.CTk):
 
         self.chat_suggestions = []
         for i, s in enumerate(suggestions):
-            tmp = gui.CTkButton(self.chat_frame, text=s['prompt'], command=lambda i=i: self.select_suggestion(i))
+            tmp = gui.CTkButton(self.suggestions_frame, text=s['prompt'], command=lambda i=i: self.select_suggestion(i))
             tmp.grid(row=i%2, column=i//2, padx=20, pady=20, sticky='nswe')
             self.chat_suggestions.append(tmp)
 
     def select_suggestion(self, i):
         s = self.chat_suggestions[i].cget('text')
-        self.answer_entry.delete(0, 'end')
-        self.answer_entry.insert(0, s)
+        self.prompt_entry.delete(0, 'end')
+        self.prompt_entry.insert(0, s)
 
         for e in self.chat_suggestions:
             e.grid_remove()
@@ -264,25 +273,40 @@ class ChatLLM(gui.CTk):
     def select_gen_suggestions(self):
         self.settings['generate suggestions'] = True if self.generate_suggestions_check.get() else False
 
-    def update_chat(self):
-        # self.chat_textbox.configure(state='normal')
-        # self.chat_textbox.delete('0.0', 'end')
-        # self.chat_textbox.insert('0.0', '\n'.join([f'{e["who"]}: {e["msg"]}\n' for e in self.chat]))
-        # self.chat_textbox.configure(state='disabled')
+    def update_last_chat_entry(self, entry):
+        self.chat_entries[-1].configure(state='normal')
+        self.chat_entries[-1].delete('0.0', 'end')
+        self.chat_entries[-1].insert('0.0', entry['msg'])
+        self.chat_entries[-1].configure(state='disabled')
+
         self.update()
 
-    def answer_cb(self):
-        prompt = self.answer_entry.get()
-        self.answer_entry.delete(0, 'end')
+    def add_chat_entry(self, entry):
+        self.suggestions_frame.grid_remove()
+
+        tmp = gui.CTkTextbox(self.chat_frame)
+
+        tmp.insert('0.0', entry['msg'])
+        tmp.configure(state='disabled')
+
+        tmp.grid(row=len(self.chat_entries), column=1 if entry['who'] == 'user' else 0, padx=20, pady=20, sticky='wen')
+
+        self.chat_entries.append(tmp)
+        self.update()
+
+    def prompt_cb(self):
+        prompt = self.prompt_entry.get()
+        self.prompt_entry.delete(0, 'end')
 
         self.chat.append({'who': 'user', 'msg': prompt})
-        self.update_chat()
+        self.add_chat_entry(self.chat[-1])
 
         self.chat.append({'who': 'ai', 'msg': ''})
-        for t in self.model.answer_stream(prompt):
-            self.chat[-1]['msg'] += t['response']
-            self.update_chat()
+        self.add_chat_entry(self.chat[-1])
 
+        for t in self.model.prompt_stream(prompt):
+            self.chat[-1]['msg'] += t['response']
+            self.update_last_chat_entry(self.chat[-1])
 
 # settings
 settings = {
