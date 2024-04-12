@@ -175,9 +175,11 @@ class ChatLLM(gui.CTk):
         super().__init__()
 
         self.settings = settings
+        self.model = None
+
         self.chat = []
         self.chat_entries = []
-        self.model = None
+        self.answering = False
 
         self.title('ChatLLM')
         self.geometry('1280x720')
@@ -296,6 +298,22 @@ class ChatLLM(gui.CTk):
 
     def prompt_cb(self):
         prompt = self.prompt_entry.get()
+
+        if not prompt or self.answering:
+            print('stop')
+            self.prompt_go.configure(text='Go')
+            self.prompt_go.configure(fg_color=gui.ThemeManager.theme["CTkButton"]["fg_color"])
+            self.prompt_go.configure(hover_color=gui.ThemeManager.theme["CTkButton"]["hover_color"])
+            self.answering = False
+            return
+
+        print('go')
+        self.answering = True
+
+        self.prompt_go.configure(text='Stop')
+        self.prompt_go.configure(fg_color='#c42d43')
+        self.prompt_go.configure(hover_color='#b71c33')
+
         self.prompt_entry.delete(0, 'end')
 
         self.chat.append({'who': 'user', 'msg': prompt})
@@ -304,16 +322,24 @@ class ChatLLM(gui.CTk):
         self.chat.append({'who': 'ai', 'msg': ''})
         self.add_chat_entry(self.chat[-1])
 
-        for t in self.model.prompt_stream(prompt):
+        stream = self.model.prompt_stream(prompt)
+
+        for t in stream:
+            if not self.answering:
+                stream.close()
+                break
+
             self.chat[-1]['msg'] += t['response']
             self.update_last_chat_entry(self.chat[-1])
+
+        self.answering = False
 
 # settings
 settings = {
     'theme': 'dark',
     'color': 'blue',
     'lang': 'en',
-    'generate suggestions': True
+    'generate suggestions': False
 }
 
 # app
