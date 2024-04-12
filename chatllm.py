@@ -19,7 +19,7 @@ class Model:
     def generate_suggestions(self):
         res = ollama.generate(model=self.name, prompt=Model.PROMPTS_SUGGESTION[self.lang])['response']
         return json.loads(res)
-    
+
     def answer(self, prompt):
         return ollama.generate(model=self.name, prompt=prompt)['response']
 
@@ -35,10 +35,8 @@ class ChatLLM(gui.CTk):
         self.chat = []
         self.model = None
 
-        self.select_model_cb(Model.get_models()[0])
-
         self.title('ChatLLM')
-        self.geometry('800x600')
+        self.geometry('1280x720')
         self.resizable(True, True)
 
         self.rowconfigure(0, weight=1)
@@ -51,44 +49,83 @@ class ChatLLM(gui.CTk):
         self.side_panel_frame = gui.CTkFrame(self)
         self.side_panel_frame.grid(row=0, column=0, padx=20, pady=20, sticky='nsw', rowspan=2)
 
-        self.model_box = gui.CTkComboBox(self.side_panel_frame, values=Model.get_models(), command=self.select_model_cb)
+        self.model_box = gui.CTkComboBox(self.side_panel_frame, values=Model.get_models())
         self.model_box.grid(row=0, column=0, padx=20, pady=20)
+
+        self.model_load = gui.CTkButton(self.side_panel_frame, text='load', width=40, command=lambda: self.select_model_cb(self.model_box.get()))
+        self.model_load.grid(row=0, column=1, padx=(0, 20), pady=20)
 
         self.theme_box = gui.CTkComboBox(self.side_panel_frame, values=['dark', 'light'], command=self.select_theme_cb)
         self.theme_box.grid(row=1, column=0, padx=20, pady=(0, 20))
 
-    def _init_chat(self):
-        self.chat_frame = gui.CTkFrame(self)
-        self.chat_frame.grid(row=0, column=1, padx=(0, 20), pady=20, stick='nswe')
-        self.chat_frame.rowconfigure(0, weight=1)
-        self.chat_frame.columnconfigure(0, weight=1)
+        self.generate_suggestions_check = gui.CTkCheckBox(self.side_panel_frame, text='suggestions', command=self.select_gen_suggestions)
+        self.generate_suggestions_check.select()
 
-        self.answer_entry = gui.CTkEntry(self.chat_frame)
+        if not self.settings['generate suggestions']:
+            self.generate_suggestions_check.deselect()
+
+        self.generate_suggestions_check.grid(row=2, column=0, padx=20, pady=(0, 20))
+
+    def _init_chat(self):
+        self.chat_main_frame = gui.CTkFrame(self)
+        self.chat_main_frame.grid(row=0, column=1, padx=(0, 20), pady=20, stick='nswe')
+        self.chat_main_frame.rowconfigure(0, weight=1)
+        self.chat_main_frame.columnconfigure(0, weight=1)
+
+        self.answer_entry = gui.CTkEntry(self.chat_main_frame, corner_radius=20)
         self.answer_entry.grid(row=1, column=0, padx=(20, 0), pady=20, stick='we')
 
-        self.answer_go = gui.CTkButton(self.chat_frame, text='>', width=28, command=self.answer_cb)
+        self.answer_go = gui.CTkButton(self.chat_main_frame, text='Go', width=28, command=self.answer_cb)
         self.answer_go.grid(row=1, column=1, padx=(10, 20), pady=20)
 
-        self.chat_textbox = gui.CTkTextbox(self.chat_frame)
-        self.chat_textbox.configure(state='disabled')
-        self.chat_textbox.grid(row=0, column=0, padx=20, pady=(20, 0), columnspan=2, stick='nswe')
+        self.chat_frame = gui.CTkFrame(self.chat_main_frame)
+        self.chat_frame.grid(row=0, column=0, padx=20, pady=(20, 0), columnspan=2, stick='nswe')
+        self.chat_frame.rowconfigure(0, weight=1)
+        self.chat_frame.rowconfigure(1, weight=1)
+        self.chat_frame.columnconfigure(0, weight=1)
+        self.chat_frame.columnconfigure(1, weight=1)
 
     def select_model_cb(self, name):
         print(name)
         self.model = Model(name, settings['lang'])
-        # suggestions = self.model.generate_suggestions()
-        # print(suggestions)
+
+        if (not self.settings['generate suggestions']) or (self.chat_frame is None) or self.chat:
+            return
+
+        suggestions = self.model.generate_suggestions()
+
+        print(suggestions)
+
+        self.chat_suggestions = []
+        for i, s in enumerate(suggestions):
+            tmp = gui.CTkButton(self.chat_frame, text=s['prompt'], command=lambda i=i: self.select_suggestion(i))
+            tmp.grid(row=i%2, column=i//2, padx=20, pady=20, sticky='nswe')
+            self.chat_suggestions.append(tmp)
+
+    def select_suggestion(self, i):
+        s = self.chat_suggestions[i].cget('text')
+        self.answer_entry.delete(0, 'end')
+        self.answer_entry.insert(0, s)
+
+        for e in self.chat_suggestions:
+            e.grid_remove()
+            e.destroy()
+
+        self.chat_suggestions.clear()
 
     def select_theme_cb(self, theme):
         print(theme)
         self.settings['theme'] = theme
         gui.set_appearance_mode(theme)
 
+    def select_gen_suggestions(self):
+        self.settings['generate suggestions'] = True if self.generate_suggestions_check.get() else False
+
     def update_chat(self):
-        self.chat_textbox.configure(state='normal')
-        self.chat_textbox.delete('0.0', 'end')
-        self.chat_textbox.insert('0.0', '\n'.join([f'{e["who"]}: {e["msg"]}\n' for e in self.chat]))
-        self.chat_textbox.configure(state='disabled')
+        # self.chat_textbox.configure(state='normal')
+        # self.chat_textbox.delete('0.0', 'end')
+        # self.chat_textbox.insert('0.0', '\n'.join([f'{e["who"]}: {e["msg"]}\n' for e in self.chat]))
+        # self.chat_textbox.configure(state='disabled')
         self.update()
 
     def answer_cb(self):
@@ -108,7 +145,8 @@ class ChatLLM(gui.CTk):
 settings = {
     'theme': 'dark',
     'color': 'blue',
-    'lang': 'en'
+    'lang': 'en',
+    'generate suggestions': True
 }
 
 # app
