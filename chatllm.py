@@ -1,12 +1,155 @@
 import json
 import ollama
 import customtkinter as gui
+import random
 
+
+BUILTIN_SUGGESTIONS = {
+    'en': [
+        {'prompt': 'Describe the process of making a sandwich.', 'topic': 'Cooking'},
+        {'prompt': 'Explain how photosynthesis works in plants.', 'topic': 'Biology'},
+        {'prompt': "Summarize the plot of 'The Great Gatsby' by F. Scott Fitzgerald.", 'topic': 'Literature'},
+        {'prompt': 'Describe the primary function of a heart.', 'topic': 'Anatomy'},
+        {'prompt': 'Explain the concept of gravity.', 'topic': 'Physics'},
+        {'prompt': 'Summarize the events that led to the American Revolution.', 'topic': 'History'},
+        {'prompt': 'Describe the process of respiration in humans.', 'topic': 'Biology'},
+        {'prompt': 'Explain the function of a CPU in a computer.', 'topic': 'Computer Science'},
+        {'prompt': "Summarize the plot of 'To Kill a Mockingbird' by Harper Lee.", 'topic': 'Literature'},
+        {'prompt': 'Describe the process of digestion in humans.', 'topic': 'Biology'},
+        {'prompt': 'Explain how a solar panel generates electricity.', 'topic': 'Physics'},
+        {'prompt': 'Summarize the events that led to World War II.', 'topic': 'History'},
+        {'prompt': 'Describe the process of cell division in organisms.', 'topic': 'Biology'},
+        {'prompt': 'Explain how a car engine works.', 'topic': 'Engineering'},
+        {'prompt': "Summarize the plot of 'Pride and Prejudice' by Jane Austen.", 'topic': 'Literature'},
+        {'prompt': 'Describe the process of photosynthesis in algae.', 'topic': 'Biology'},
+        {'prompt': 'Explain how a smartphone camera works.', 'topic': 'Engineering'},
+        {'prompt': 'Summarize the events that led to the French Revolution.', 'topic': 'History'},
+        {'prompt': 'Describe the process of transpiration in plants.', 'topic': 'Biology'},
+        {'prompt': 'Explain how a rocket launches into space.', 'topic': 'Physics'},
+        {'prompt': "Summarize the plot of '1984' by George Orwell.", 'topic': 'Literature'},
+        {'prompt': 'Describe the process of mitosis in organisms.', 'topic': 'Biology'},
+        {'prompt': 'Explain how a wind turbine generates electricity.', 'topic': 'Physics'},
+        {'prompt': 'Summarize the events that led to the Civil War in the United States.', 'topic': 'History'},
+        {'prompt': 'Describe the process of osmosis in cells.', 'topic': 'Biology'},
+        {'prompt': 'Explain how a thermostat works.', 'topic': 'Engineering'},
+        {
+            "prompt": "What is the meaning of life?",
+            "topic": "philosophy"
+        },
+        {
+            "prompt": "Who invented the wheel?",
+            "topic": "history"
+        },
+        {
+            "prompt": "Can you tell me a joke?",
+            "topic": "humor"
+        },
+        {
+            "prompt": "What is the formula for calculating the area of a triangle?",
+            "topic": "mathematics"
+        },
+        {
+            "prompt": "Who discovered penicillin?",
+            "topic": "science"
+        },
+        {
+            "prompt": "What are some tips for effective public speaking?",
+            "topic": "communication"
+        },
+        {
+            "prompt": "Can you explain the concept of quantum entanglement?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What is the difference between a democracy and a republic?",
+            "topic": "political science"
+        },
+        {
+            "prompt": "Who was Marie Curie?",
+            "topic": "science"
+        },
+        {
+            "prompt": "How does photosynthesis work?",
+            "topic": "biology"
+        },
+        {
+            "prompt": "What are the key differences between a computer and a human brain?",
+            "topic": "neuroscience"
+        },
+        {
+            "prompt": "Can you explain the concept of time dilation in relativity theory?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What are some effective strategies for time management?",
+            "topic": "productivity"
+        },
+        {
+            "prompt": "Who discovered the structure of DNA?",
+            "topic": "biology"
+        },
+        {
+            "prompt": "Can you explain the concept of artificial intelligence?",
+            "topic": "technology"
+        },
+        {
+            "prompt": "What are some common symptoms of depression?",
+            "topic": "psychology"
+        },
+        {
+            "prompt": "What is the origin of the universe?",
+            "topic": "cosmology"
+        },
+        {
+            "prompt": "How do smartphones affect our brain function and mental health?",
+            "topic": "psychology"
+        },
+        {
+            "prompt": "What are the key components of a healthy diet?",
+            "topic": "nutrition"
+        },
+        {
+            "prompt": "What is the most efficient algorithm for searching an unsorted list?",
+            "topic": "computer science"
+        },
+        {
+            "prompt": "Can you explain the concept of parallel universes in quantum mechanics?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What is the significance of the famous Dancing Wu Li Masters book?",
+            "topic": "quantum physics"
+        },
+        {
+            "prompt": "Can you explain the concept of the observer effect in quantum mechanics?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What is the primary function of a computer's CPU?",
+            "topic": "computer science"
+        },
+        {
+            "prompt": "Who was Julius Caesar and what was his impact on history?",
+            "topic": "history"
+        },
+        {
+            "prompt": "What are some strategies for coping with anxiety?",
+            "topic": "psychology"
+        },
+        {
+            "prompt": "How does the immune system function in the human body?",
+            "topic": "immunology"
+        }
+    ],
+    'ru': [
+
+    ]
+}
 
 class Model:
     PROMPTS_SUGGESTION = {
-        'en': 'generate 2 simple and 2 interesting prompts (about 12 words) to ChatGPT. Use json schema: [{"prompt":"string", "topic":"string"}]',
-        'ru': 'придумай 2 простых и 2 интересных промпта (не больше 12 слов) для ChatGPT на русском языке. Используй json схему: [{"prompt":"string", "topic":"string"}]'
+        'en': 'generate 2 simple and 2 interesting prompts (about 12 words) to ChatGPT. Use json schema [{"prompt":"string", "topic":"string"}]',
+        'ru': 'придумай 2 простых и 2 интересных промпта (не больше 12 слов) для ChatGPT на русском языке. Используй json schema [{"prompt":"string", "topic":"string"}]'
     }
 
     def get_models():
@@ -52,13 +195,13 @@ class ChatLLM(gui.CTk):
         self.model_box = gui.CTkComboBox(self.side_panel_frame, values=Model.get_models())
         self.model_box.grid(row=0, column=0, padx=20, pady=20)
 
-        self.model_load = gui.CTkButton(self.side_panel_frame, text='load', width=40, command=lambda: self.select_model_cb(self.model_box.get()))
+        self.model_load = gui.CTkButton(self.side_panel_frame, text='load', width=40, command=lambda: self.load_model_cb(self.model_box.get()))
         self.model_load.grid(row=0, column=1, padx=(0, 20), pady=20)
 
         self.theme_box = gui.CTkComboBox(self.side_panel_frame, values=['dark', 'light'], command=self.select_theme_cb)
         self.theme_box.grid(row=1, column=0, padx=20, pady=(0, 20))
 
-        self.generate_suggestions_check = gui.CTkCheckBox(self.side_panel_frame, text='suggestions', command=self.select_gen_suggestions)
+        self.generate_suggestions_check = gui.CTkCheckBox(self.side_panel_frame, text='generate suggestions', command=self.select_gen_suggestions)
         self.generate_suggestions_check.select()
 
         if not self.settings['generate suggestions']:
@@ -75,7 +218,7 @@ class ChatLLM(gui.CTk):
         self.answer_entry = gui.CTkEntry(self.chat_main_frame, corner_radius=20)
         self.answer_entry.grid(row=1, column=0, padx=(20, 0), pady=20, stick='we')
 
-        self.answer_go = gui.CTkButton(self.chat_main_frame, text='Go', width=28, command=self.answer_cb)
+        self.answer_go = gui.CTkButton(self.chat_main_frame, text='Go', width=40, command=self.answer_cb)
         self.answer_go.grid(row=1, column=1, padx=(10, 20), pady=20)
 
         self.chat_frame = gui.CTkFrame(self.chat_main_frame)
@@ -85,14 +228,14 @@ class ChatLLM(gui.CTk):
         self.chat_frame.columnconfigure(0, weight=1)
         self.chat_frame.columnconfigure(1, weight=1)
 
-    def select_model_cb(self, name):
+    def load_model_cb(self, name):
         print(name)
         self.model = Model(name, settings['lang'])
 
-        if (not self.settings['generate suggestions']) or (self.chat_frame is None) or self.chat:
+        if (self.chat_frame is None) or self.chat:
             return
 
-        suggestions = self.model.generate_suggestions()
+        suggestions = self.model.generate_suggestions() if self.settings['generate suggestions'] else random.sample(BUILTIN_SUGGESTIONS[self.model.lang], 4)
 
         print(suggestions)
 
