@@ -211,6 +211,218 @@
         {
             "prompt": "How does the immune system function in the human body?",
             "topic": "immunology"
+        },
+        {
+            "prompt": "Describe how to make scrambled eggs.",
+            "topic": "Cooking"
+        },
+        {
+            "prompt": "What is the highest mountain range in the world?",
+            "topic": "Geography"
+        },
+        {
+            "prompt": "List the primary colors of the rainbow.",
+            "topic": "Science"
+        },
+        {
+            "prompt": "Who wrote the novel 'War and Peace'?",
+            "topic": "Literature"
+        },
+        {
+            "prompt": "What is the longest river in the world?",
+            "topic": "Geography"
+        },
+        {
+            "prompt": "What is an operating system?",
+            "topic": "Computer Science"
+        },
+        {
+            "prompt": "Who was the first president of the United States?",
+            "topic": "History"
+        },
+        {
+            "prompt": "Explain the basic rules of the game of chess.",
+            "topic": "Sports"
+        },
+        {
+            "prompt": "What are the advantages and disadvantages of online learning?",
+            "topic": "Education"
+        },
+        {
+            "prompt": "Name the three largest oceans.",
+            "topic": "Geography"
+        },
+        {
+            "prompt": "What is photosynthesis?",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Who is Albert Einstein?",
+            "topic": "Science"
+        },
+        {
+            "prompt": "What is the highest mountain in Russia?",
+            "topic": "Geography"
+        },
+        {
+            "prompt": "Explain the concept of a mortgage.",
+            "topic": "Finance"
+        },
+        {
+            "prompt": "Who composed the music for 'Swan Lake' ballet?",
+            "topic": "Music"
+        },
+        {
+            "prompt": "List different types of figure skating.",
+            "topic": "Sports"
+        },
+        {
+            "prompt": "Describe microwave oven safety guidelines.",
+            "topic": "Home Appliances"
+        },
+        {
+            "prompt": "Who was the king of England during World War II?",
+            "topic": "History"
+        },
+        {
+            "prompt": "What is DNA?",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Name various types of diets.",
+            "topic": "Health"
+        },
+        {
+            "prompt": "Describe the process of planting seeds in pots.",
+            "topic": "Gardening"
+        },
+        {
+            "prompt": "Who is Donald Trump?",
+            "topic": "Politics"
+        },
+        {
+            "prompt": "What is gravity?",
+            "topic": "Science"
+        },
+        {
+            "prompt": "List different forms of art.",
+            "topic": "Art"
+        },
+        {
+            "prompt": "Explain how to charge a battery.",
+            "topic": "Technology"
+        },
+        {
+            "prompt": "Who painted the Mona Lisa?",
+            "topic": "Art"
+        },
+        {
+            "prompt": "What would Sherlock Holmes do with access to AI?",
+            "topic": "Literature meets Tech"
+        },
+        {
+            "prompt": "Imagine chess pieces coming to life. How would they play?",
+            "topic": "Sports Fantasy"
+        },
+        {
+            "prompt": "Invent a new sport using only items found in a kitchen.",
+            "topic": "Sports meets Cooking"
+        },
+        {
+            "prompt": "If you could talk to animals, which one would you chat with?",
+            "topic": "Fantasy meets Nature"
+        },
+        {
+            "prompt": "Design a social network for trees. What features would it have?",
+            "topic": "Tech meets Nature"
+        },
+        {
+            "prompt": "What if humans could fly like birds? How would life change?",
+            "topic": "Fantasy meets Science"
+        },
+        {
+            "prompt": "Create a musical instrument inspired by nature.",
+            "topic": "Music meets Nature"
+        },
+        {
+            "prompt": "How would a virtual reality school look and function?",
+            "topic": "Education VR"
+        },
+        {
+            "prompt": "If you could time travel, which historical event would you attend?",
+            "topic": "Fantasy meets History"
+        },
+        {
+            "prompt": "Invent a new art form based on mathematics.",
+            "topic": "Art meets Math"
+        },
+        {
+            "prompt": "Imagine life on Mars in 100 years. What would it be like?",
+            "topic": "Space Fantasy"
+        },
+        {
+            "prompt": "What if money didn't exist? How would society function?",
+            "topic": "Society without Money"
+        },
+        {
+            "prompt": "Design a new mode of transport inspired by marine life.",
+            "topic": "Transport meets Nature"
+        },
+        {
+            "prompt": "How would a soccer game on the Moon differ?",
+            "topic": "Sports in Space"
+        },
+        {
+            "prompt": "If you could talk to inanimate objects, whom would you chat with?",
+            "topic": "Fantasy meets Daily Life"
+        },
+        {
+            "prompt": "Invent a new dish inspired by your favorite movies.",
+            "topic": "Cinema Cuisine"
+        },
+        {
+            "prompt": "How would fashion look in a futuristic utopia?",
+            "topic": "Fashion Fantasy"
+        },
+        {
+            "prompt": "What if people could read each other's thoughts? Pros and cons?",
+            "topic": "Society and Mind Reading"
+        },
+        {
+            "prompt": "Create a new music genre based on your emotions.",
+            "topic": "Music and Emotions"
+        },
+        {
+            "prompt": "Describe your ideal utopian reality.",
+            "topic": "Philosophy meets Society"
+        },
+        {
+            "prompt": "If you could control the weather, what would your ideal climate be?",
+            "topic": "Fantasy Weather"
+        },
+        {
+            "prompt": "Invent a new form of therapy using virtual reality.",
+            "topic": "Medicine VR"
+        },
+        {
+            "prompt": "What if humans could live forever? Pros and cons?",
+            "topic": "Immortality Debate"
+        },
+        {
+            "prompt": "Create a new form of entertainment inspired by ancient Egypt.",
+            "topic": "History meets Fun"
+        },
+        {
+            "prompt": "How would underwater life look in the future?",
+            "topic": "Future Ocean Life"
+        },
+        {
+            "prompt": "If you could create new elements, what would they be like?",
+            "topic": "Fantasy Chemistry"
+        },
+        {
+            "prompt": "Invent a new sport inspired by your favorite video games.",
+            "topic": "Gaming Sports"
         }
     ],
     "ru": [
@@ -441,6 +653,326 @@
         {
             "prompt": "Опишите свои мысли о природе страха.",
             "topic": "Психология"
+        },
+        {
+            "prompt": "Опиши процесс приготовления яичницы-болтуньи.",
+            "topic": "Кулинария"
+        },
+        {
+            "prompt": "Какой самый высокий горный хребет в мире?",
+            "topic": "География"
+        },
+        {
+            "prompt": "Перечисли основные цвета радуги.",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Кто написал роман \"Война и мир\"?",
+            "topic": "Литература"
+        },
+        {
+            "prompt": "Какой самый длинный Fluss в мире?",
+            "topic": "География"
+        },
+        {
+            "prompt": "Что такое операционная система?",
+            "topic": "Информатика"
+        },
+        {
+            "prompt": "Кто был первым президентом США?",
+            "topic": "История"
+        },
+        {
+            "prompt": "Опиши основные правила игры в шахматы.",
+            "topic": "Спорт"
+        },
+        {
+            "prompt": "Какие ты видишь преимущества и недостатки дистанционного обучения?",
+            "topic": "Образование"
+        },
+        {
+            "prompt": "Назови три самых больших океана.",
+            "topic": "География"
+        },
+        {
+            "prompt": "Что такое фотосинтез?",
+            "topic": "Биология"
+        },
+        {
+            "prompt": "Кто такой Альберт Эйнштейн?",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Какая самая высокая гора в России?",
+            "topic": "География"
+        },
+        {
+            "prompt": "Что такое ипотека?",
+            "topic": "Финансы"
+        },
+        {
+            "prompt": "Кто написал музыку к балету \"Лебединое озеро\"?",
+            "topic": "Музыка"
+        },
+        {
+            "prompt": "Какие ты знаешь виды фигурного катания?",
+            "topic": "Спорт"
+        },
+        {
+            "prompt": "Опиши правила безопасности при работе с микроволновой печью.",
+            "topic": "Бытовая техника"
+        },
+        {
+            "prompt": "Кто был королем Англии во время Второй мировой войны?",
+            "topic": "История"
+        },
+        {
+            "prompt": "Что такое ДНК?",
+            "topic": "Биология"
+        },
+        {
+            "prompt": "Какие ты знаешь виды диет?",
+            "topic": "Здоровье"
+        },
+        {
+            "prompt": "Опиши процесс посадки семян в горшки.",
+            "topic": "Садоводство"
+        },
+        {
+            "prompt": "Кто такой Дональд Трамп?",
+            "topic": "Политика"
+        },
+        {
+            "prompt": "Что такое гравитация?",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Какие ты знаешь виды искусств?",
+            "topic": "Культура"
+        },
+        {
+            "prompt": "Опиши процесс зарядки аккумулятора.",
+            "topic": "Техника"
+        },
+        {
+            "prompt": "Кто написал картину \"Джоконда\"?",
+            "topic": "Искусство"
+        },
+        {
+            "prompt": "Что бы сделал Шерлок Холмс, если бы у него был AI?",
+            "topic": "Литература и технологии"
+        },
+        {
+            "prompt": "Как бы выглядела игра Chess, если бы фигуры оживали?",
+            "topic": "Спорт и фантазия"
+        },
+        {
+            "prompt": "Создай новый вид спорта, используя только предметы на кухне.",
+            "topic": "Спорт и кулинария"
+        },
+        {
+            "prompt": "Представь, что ты можешь общаться с животными. С кем бы ты поговорил?",
+            "topic": "Фантазия и природа"
+        },
+        {
+            "prompt": "Как бы выглядела социальная сеть для деревьев? Опиши ее функции.",
+            "topic": "Технологии и природа"
+        },
+        {
+            "prompt": "Что бы случилось, если бы люди могли летать, как птицы?",
+            "topic": "Фантазия и наука"
+        },
+        {
+            "prompt": "Создай новый музыкальный инструмент, вдохновленный природой.",
+            "topic": "Музыка и природа"
+        },
+        {
+            "prompt": "Как бы выглядела школа в виртуальной реальности?",
+            "topic": "Образование и технологии"
+        },
+        {
+            "prompt": "Представь, что ты можешь путешествовать во времени. Куда бы ты пошел?",
+            "topic": "Фантазия и история"
+        },
+        {
+            "prompt": "Создай новый вид искусства, основанный на математике.",
+            "topic": "Искусство и наука"
+        },
+        {
+            "prompt": "Как бы выглядела жизнь на Марсе через 100 лет?",
+            "topic": "Космос и фантазия"
+        },
+        {
+            "prompt": "Что бы случилось, если бы деньги перестали существовать?",
+            "topic": "Общество и экономика"
+        },
+        {
+            "prompt": "Создай новый вид транспорта, вдохновленный морскими животными.",
+            "topic": "Транспорт и природа"
+        },
+        {
+            "prompt": "Как бы выглядела игра в футбол на Луне?",
+            "topic": "Спорт и космос"
+        },
+        {
+            "prompt": "Представь, что ты можешь разговаривать с предметами. С кем бы ты поговорил?",
+            "topic": "Фантазия и повседневная жизнь"
+        },
+        {
+            "prompt": "Создай новый вид еды, вдохновленный твоими любимыми фильмами.",
+            "topic": "Кулинария и кино"
+        },
+        {
+            "prompt": "Как бы выглядела мода в будущем, через 100 лет?",
+            "topic": "Мода и фантазия"
+        },
+        {
+            "prompt": "Что бы случилось, если бы люди могли читать мысли друг друга?",
+            "topic": "Общество и психология"
+        },
+        {
+            "prompt": "Создай новый жанр музыки, основанный на твоих эмоциях.",
+            "topic": "Музыка и чувства"
+        },
+        {
+            "prompt": "Как бы выглядела идеальная утопическая реальность?",
+            "topic": "Философия и общество"
+        },
+        {
+            "prompt": "Представь, что ты можешь управлять погодой. Какая бы была твоя идеальная погода?",
+            "topic": "Природа и фантазия"
+        },
+        {
+            "prompt": "Создай новый вид терапии, основанный на виртуальной реальности.",
+            "topic": "Медицина и технологии"
+        },
+        {
+            "prompt": "Что бы случилось, если бы люди могли жить вечно?",
+            "topic": "Наука и философия"
+        },
+        {
+            "prompt": "Создай новый вид развлечения, вдохновленный культурой ancient Egypt.",
+            "topic": "Культура и история"
+        },
+        {
+            "prompt": "Как бы выглядела жизнь под водой в будущем?",
+            "topic": "Футурология и природа"
+        },
+        {
+            "prompt": "Представь, что ты можешь создавать новые элементы таблицы Менделеева. Какие бы ты создал?",
+            "topic": "Наука и фантазия"
+        },
+        {
+            "prompt": "Создай новый вид спорта, основанный на твоих любимых видеоиграх.",
+            "topic": "Спорт и игры"
+        },
+        {
+            "prompt": "Что бы сделал Шерлок Холмс, если бы у него был AI?",
+            "topic": "Литература и технологии"
+        },
+        {
+            "prompt": "Как бы выглядела игра Chess, если бы фигуры оживали?",
+            "topic": "Спорт и фантазия"
+        },
+        {
+            "prompt": "Создай новый вид спорта, используя только предметы на кухне.",
+            "topic": "Спорт и кулинария"
+        },
+        {
+            "prompt": "Представь, что ты можешь общаться с животными. С кем бы ты поговорил?",
+            "topic": "Фантазия и природа"
+        },
+        {
+            "prompt": "Как бы выглядела социальная сеть для деревьев? Опиши ее функции.",
+            "topic": "Технологии и природа"
+        },
+        {
+            "prompt": "Что бы случилось, если бы люди могли летать, как птицы?",
+            "topic": "Фантазия и наука"
+        },
+        {
+            "prompt": "Создай новый музыкальный инструмент, вдохновленный природой.",
+            "topic": "Музыка и природа"
+        },
+        {
+            "prompt": "Как бы выглядела школа в виртуальной реальности?",
+            "topic": "Образование и технологии"
+        },
+        {
+            "prompt": "Представь, что ты можешь путешествовать во времени. Куда бы ты пошел?",
+            "topic": "Фантазия и история"
+        },
+        {
+            "prompt": "Создай новый вид искусства, основанный на математике.",
+            "topic": "Искусство и наука"
+        },
+        {
+            "prompt": "Как бы выглядела жизнь на Марсе через 100 лет?",
+            "topic": "Космос и фантазия"
+        },
+        {
+            "prompt": "Что бы случилось, если бы деньги перестали существовать?",
+            "topic": "Общество и экономика"
+        },
+        {
+            "prompt": "Создай новый вид транспорта, вдохновленный морскими животными.",
+            "topic": "Транспорт и природа"
+        },
+        {
+            "prompt": "Как бы выглядела игра в футбол на Луне?",
+            "topic": "Спорт и космос"
+        },
+        {
+            "prompt": "Представь, что ты можешь разговаривать с предметами. С кем бы ты поговорил?",
+            "topic": "Фантазия и повседневная жизнь"
+        },
+        {
+            "prompt": "Создай новый вид еды, вдохновленный твоими любимыми фильмами.",
+            "topic": "Кулинария и кино"
+        },
+        {
+            "prompt": "Как бы выглядела мода в будущем, через 100 лет?",
+            "topic": "Мода и фантазия"
+        },
+        {
+            "prompt": "Что бы случилось, если бы люди могли читать мысли друг друга?",
+            "topic": "Общество и психология"
+        },
+        {
+            "prompt": "Создай новый жанр музыки, основанный на твоих эмоциях.",
+            "topic": "Музыка и чувства"
+        },
+        {
+            "prompt": "Как бы выглядела идеальная утопическая реальность?",
+            "topic": "Философия и общество"
+        },
+        {
+            "prompt": "Представь, что ты можешь управлять погодой. Какая бы была твоя идеальная погода?",
+            "topic": "Природа и фантазия"
+        },
+        {
+            "prompt": "Создай новый вид терапии, основанный на виртуальной реальности.",
+            "topic": "Медицина и технологии"
+        },
+        {
+            "prompt": "Что бы случилось, если бы люди могли жить вечно?",
+            "topic": "Наука и философия"
+        },
+        {
+            "prompt": "Создай новый вид развлечения, вдохновленный культурой ancient Egypt.",
+            "topic": "Культура и история"
+        },
+        {
+            "prompt": "Как бы выглядела жизнь под водой в будущем?",
+            "topic": "Футурология и природа"
+        },
+        {
+            "prompt": "Представь, что ты можешь создавать новые элементы таблицы Менделеева. Какие бы ты создал?",
+            "topic": "Наука и фантазия"
+        },
+        {
+            "prompt": "Создай новый вид спорта, основанный на твоих любимых видеоиграх.",
+            "topic": "Спорт и игры"
         }
     ]
 }
