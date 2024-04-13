@@ -1,0 +1,446 @@
+{
+    "en": [
+        {
+            "prompt": "Describe the process of making a sandwich.",
+            "topic": "Cooking"
+        },
+        {
+            "prompt": "Explain how photosynthesis works in plants.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Summarize the plot of 'The Great Gatsby' by F. Scott Fitzgerald.",
+            "topic": "Literature"
+        },
+        {
+            "prompt": "Describe the primary function of a heart.",
+            "topic": "Anatomy"
+        },
+        {
+            "prompt": "Explain the concept of gravity.",
+            "topic": "Physics"
+        },
+        {
+            "prompt": "Summarize the events that led to the American Revolution.",
+            "topic": "History"
+        },
+        {
+            "prompt": "Describe the process of respiration in humans.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain the function of a CPU in a computer.",
+            "topic": "Computer Science"
+        },
+        {
+            "prompt": "Summarize the plot of 'To Kill a Mockingbird' by Harper Lee.",
+            "topic": "Literature"
+        },
+        {
+            "prompt": "Describe the process of digestion in humans.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain how a solar panel generates electricity.",
+            "topic": "Physics"
+        },
+        {
+            "prompt": "Summarize the events that led to World War II.",
+            "topic": "History"
+        },
+        {
+            "prompt": "Describe the process of cell division in organisms.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain how a car engine works.",
+            "topic": "Engineering"
+        },
+        {
+            "prompt": "Summarize the plot of 'Pride and Prejudice' by Jane Austen.",
+            "topic": "Literature"
+        },
+        {
+            "prompt": "Describe the process of photosynthesis in algae.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain how a smartphone camera works.",
+            "topic": "Engineering"
+        },
+        {
+            "prompt": "Summarize the events that led to the French Revolution.",
+            "topic": "History"
+        },
+        {
+            "prompt": "Describe the process of transpiration in plants.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain how a rocket launches into space.",
+            "topic": "Physics"
+        },
+        {
+            "prompt": "Summarize the plot of '1984' by George Orwell.",
+            "topic": "Literature"
+        },
+        {
+            "prompt": "Describe the process of mitosis in organisms.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain how a wind turbine generates electricity.",
+            "topic": "Physics"
+        },
+        {
+            "prompt": "Summarize the events that led to the Civil War in the United States.",
+            "topic": "History"
+        },
+        {
+            "prompt": "Describe the process of osmosis in cells.",
+            "topic": "Biology"
+        },
+        {
+            "prompt": "Explain how a thermostat works.",
+            "topic": "Engineering"
+        },
+        {
+            "prompt": "What is the meaning of life?",
+            "topic": "philosophy"
+        },
+        {
+            "prompt": "Who invented the wheel?",
+            "topic": "history"
+        },
+        {
+            "prompt": "Can you tell me a joke?",
+            "topic": "humor"
+        },
+        {
+            "prompt": "What is the formula for calculating the area of a triangle?",
+            "topic": "mathematics"
+        },
+        {
+            "prompt": "Who discovered penicillin?",
+            "topic": "science"
+        },
+        {
+            "prompt": "What are some tips for effective public speaking?",
+            "topic": "communication"
+        },
+        {
+            "prompt": "Can you explain the concept of quantum entanglement?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What is the difference between a democracy and a republic?",
+            "topic": "political science"
+        },
+        {
+            "prompt": "Who was Marie Curie?",
+            "topic": "science"
+        },
+        {
+            "prompt": "How does photosynthesis work?",
+            "topic": "biology"
+        },
+        {
+            "prompt": "What are the key differences between a computer and a human brain?",
+            "topic": "neuroscience"
+        },
+        {
+            "prompt": "Can you explain the concept of time dilation in relativity theory?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What are some effective strategies for time management?",
+            "topic": "productivity"
+        },
+        {
+            "prompt": "Who discovered the structure of DNA?",
+            "topic": "biology"
+        },
+        {
+            "prompt": "Can you explain the concept of artificial intelligence?",
+            "topic": "technology"
+        },
+        {
+            "prompt": "What are some common symptoms of depression?",
+            "topic": "psychology"
+        },
+        {
+            "prompt": "What is the origin of the universe?",
+            "topic": "cosmology"
+        },
+        {
+            "prompt": "How do smartphones affect our brain function and mental health?",
+            "topic": "psychology"
+        },
+        {
+            "prompt": "What are the key components of a healthy diet?",
+            "topic": "nutrition"
+        },
+        {
+            "prompt": "What is the most efficient algorithm for searching an unsorted list?",
+            "topic": "computer science"
+        },
+        {
+            "prompt": "Can you explain the concept of parallel universes in quantum mechanics?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What is the significance of the famous Dancing Wu Li Masters book?",
+            "topic": "quantum physics"
+        },
+        {
+            "prompt": "Can you explain the concept of the observer effect in quantum mechanics?",
+            "topic": "physics"
+        },
+        {
+            "prompt": "What is the primary function of a computer's CPU?",
+            "topic": "computer science"
+        },
+        {
+            "prompt": "Who was Julius Caesar and what was his impact on history?",
+            "topic": "history"
+        },
+        {
+            "prompt": "What are some strategies for coping with anxiety?",
+            "topic": "psychology"
+        },
+        {
+            "prompt": "How does the immune system function in the human body?",
+            "topic": "immunology"
+        }
+    ],
+    "ru": [
+        {
+            "prompt": "Как я могу научиться говорить по-русски?",
+            "topic": "Языки"
+        },
+        {
+            "prompt": "Что такое коды ГОСТ и их применение?",
+            "topic": "Технологии"
+        },
+        {
+            "prompt": "Как создать своё AI-ассистента, подобного мне?",
+            "topic": "Искусственный интеллект"
+        },
+        {
+            "prompt": "Какие культурные особенности России можно отнести к надревних славянских племен?",
+            "topic": "Культура"
+        },
+        {
+            "prompt": "Напишите письмо другу, в котором расскажите о своей новой работе.",
+            "topic": "Работа"
+        },
+        {
+            "prompt": "Какой самый большой океан на Земле?",
+            "topic": "География"
+        },
+        {
+            "prompt": "Что происходит в организме человека во время сна?",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Опишите основные события фильма \"Бойцовский клуб\".",
+            "topic": "Кино"
+        },
+        {
+            "prompt": "Кто был первым королем Англии?",
+            "topic": "История"
+        },
+        {
+            "prompt": "Напишите стихотворение о весне.",
+            "topic": "Литература"
+        },
+        {
+            "prompt": "Какие существуют теории о путешествиях во времени?",
+            "topic": "Фантастика"
+        },
+        {
+            "prompt": "Какие права человека защищает Конституция США?",
+            "topic": "Политика"
+        },
+        {
+            "prompt": "Опишите процесс приготовления пиццы.",
+            "topic": "Кулинария"
+        },
+        {
+            "prompt": "Кто такой Альберт Эйнштейн?",
+            "topic": "Биографии"
+        },
+        {
+            "prompt": "Какие существуют теории о происхождении жизни на Земле?",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Опишите идеальный день для отдыха и релаксации.",
+            "topic": "Стиль жизни"
+        },
+        {
+            "prompt": "Какие существуют теории о природе сознания?",
+            "topic": "Психология"
+        },
+        {
+            "prompt": "Кто такой Илон Маск? Опишите его достижения.",
+            "topic": "Биографии"
+        },
+        {
+            "prompt": "Опишите основные правила игры в шахматы.",
+            "topic": "Спорт"
+        },
+        {
+            "prompt": "Какие существуют теории заговора о Луне?",
+            "topic": "Космос"
+        },
+        {
+            "prompt": "Напишите рассказ о путешествии во времени.",
+            "topic": "Фантастика"
+        },
+        {
+            "prompt": "Кто написал роман \"Война и мир\"?",
+            "topic": "Литература"
+        },
+        {
+            "prompt": "Какие существуют теории о природе эмоций?",
+            "topic": "Психология"
+        },
+        {
+            "prompt": "Опишите процесс создания музыки в стиле хип-хоп.",
+            "topic": "Музыка"
+        },
+        {
+            "prompt": "Кто был президентом США во время Великой депрессии?",
+            "topic": "История"
+        },
+        {
+            "prompt": "Напишите рецепт вкусного и здорового смузи.",
+            "topic": "Кулинария"
+        },
+        {
+            "prompt": "Какие существуют теории о природе времени?",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Опишите идеальный вечер в кругу семьи.",
+            "topic": "Стиль жизни"
+        },
+        {
+            "prompt": "Кто такая Мария Кюри? Расскажите о ее открытиях.",
+            "topic": "Биографии"
+        },
+        {
+            "prompt": "Какие существуют теории о природе языка?",
+            "topic": "Лингвистика"
+        },
+        {
+            "prompt": "Напишите письмо своему будущему я через 10 лет.",
+            "topic": "Саморазвитие"
+        },
+        {
+            "prompt": "Опишите основные принципы здорового питания.",
+            "topic": "Здоровье"
+        },
+        {
+            "prompt": "Какие существуют теории о природе искусства?",
+            "topic": "Философия"
+        },
+        {
+            "prompt": "Напишите рассказ о дружбе, основанный на вашем личном опыте.",
+            "topic": "Отношения"
+        },
+        {
+            "prompt": "Кто такой Леонардо да Винчи? Расскажите о его талантах.",
+            "topic": "Биографии"
+        },
+        {
+            "prompt": "Опишите процесс создания анимационного фильма.",
+            "topic": "Кино"
+        },
+        {
+            "prompt": "Какие существуют теории о природе красоты?",
+            "topic": "Эстетика"
+        },
+        {
+            "prompt": "Напишите о том, как вы представляете жизнь на Марсе.",
+            "topic": "Фантастика"
+        },
+        {
+            "prompt": "Опишите свои мысли о природе счастья.",
+            "topic": "Психология"
+        },
+        {
+            "prompt": "Кто такой Стивен Хокинг? Расскажите о его вкладе в науку.",
+            "topic": "Биографии"
+        },
+        {
+            "prompt": "Напишите о том, почему спорт важен для здоровья.",
+            "topic": "Спорт"
+        },
+        {
+            "prompt": "Опишите процесс создания видеоигры.",
+            "topic": "Технологии"
+        },
+        {
+            "prompt": "Какие существуют теории о природе морали?",
+            "topic": "Философия"
+        },
+        {
+            "prompt": "Напишите рассказ о путешествии в виртуальную реальность.",
+            "topic": "Фантастика"
+        },
+        {
+            "prompt": "Опишите основные принципы работы искусственного интеллекта.",
+            "topic": "Наука"
+        },
+        {
+            "prompt": "Какие существуют теории о природе личности?",
+            "topic": "Психология"
+        },
+        {
+            "prompt": "Напишите о том, как музыка влияет на ваше настроение.",
+            "topic": "Музыка"
+        },
+        {
+            "prompt": "Опишите процесс создания картины маслом.",
+            "topic": "Искусство"
+        },
+        {
+            "prompt": "Какие существуют теории о природе знаний?",
+            "topic": "Эпистемология"
+        },
+        {
+            "prompt": "Напишите о том, как вы представляете жизнь через 100 лет.",
+            "topic": "Будущее"
+        },
+        {
+            "prompt": "Опишите свои мысли о природе любви.",
+            "topic": "Психология"
+        },
+        {
+            "prompt": "Кто такая Коко Шанель? Расскажите о ее влиянии на моду.",
+            "topic": "Биографии"
+        },
+        {
+            "prompt": "Напишите о том, почему важно заботиться об окружающей среде.",
+            "topic": "Экология"
+        },
+        {
+            "prompt": "Опишите процесс создания роботов.",
+            "topic": "Технологии"
+        },
+        {
+            "prompt": "Какие существуют теории о природе власти?",
+            "topic": "Политология"
+        },
+        {
+            "prompt": "Напишите рассказ о встрече с инопланетянами.",
+            "topic": "Фантастика"
+        },
+        {
+            "prompt": "Опишите свои мысли о природе страха.",
+            "topic": "Психология"
+        }
+    ]
+}
