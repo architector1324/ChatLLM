@@ -276,22 +276,30 @@ class ChatLLM(gui.CTk):
         self.settings['generate suggestions'] = True if self.generate_suggestions_check.get() else False
 
     def update_last_chat_entry(self, entry):
+        msg = entry['msg']
+
         self.chat_entries[-1].configure(state='normal')
         self.chat_entries[-1].delete('0.0', 'end')
-        self.chat_entries[-1].insert('0.0', entry['msg'])
+        self.chat_entries[-1].insert('0.0', msg)
         self.chat_entries[-1].configure(state='disabled')
+
+        height = 28 + 20 * (len(msg) // 72 + msg.count('\n\n'))
+
+        if self.chat_entries[-1].cget('height') != height:
+            self.chat_entries[-1].configure(height=height)
 
         self.update()
 
     def add_chat_entry(self, entry):
         self.suggestions_frame.grid_remove()
 
-        tmp = gui.CTkTextbox(self.chat_frame)
+        height = 28 + 20 * (len(entry['msg']) // 72 + entry['msg'].count('\n\n'))
+        tmp = gui.CTkTextbox(self.chat_frame, height=height)
 
         tmp.insert('0.0', entry['msg'])
         tmp.configure(state='disabled')
 
-        tmp.grid(row=len(self.chat_entries), column=1 if entry['who'] == 'user' else 0, padx=20, pady=20, sticky='wen')
+        tmp.grid(row=len(self.chat_entries), column=1 if entry['who'] == 'user' else 0, padx=10, pady=10, sticky='wen')
 
         self.chat_entries.append(tmp)
         self.update()
