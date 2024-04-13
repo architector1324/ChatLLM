@@ -4,6 +4,26 @@ import customtkinter as gui
 import random
 
 
+def str_chunks(s, w):
+    lines = []
+
+    tmp = ''
+
+    for c in s:
+        if c == '\n':
+            tmp += ' ' * (w - len(tmp))
+        else:
+            tmp += c
+
+        if len(tmp) >= w or c == '\n':
+            lines.append(tmp)
+            tmp = ''
+
+    if tmp:
+        lines.append(tmp)
+        tmp = ''
+    return lines
+
 class Model:
     PROMPTS_SUGGESTION = {
         'en': 'generate 2 simple and 2 interesting prompts (about 12 words) to ChatGPT. Use json schema [{"prompt":"string", "topic":"string"}]',
@@ -61,10 +81,10 @@ class ChatLLM(gui.CTk):
         self.model_load = gui.CTkButton(self.side_panel_frame, text='load', width=40, command=lambda: self.load_model_cb(self.model_box.get()))
         self.model_load.grid(row=0, column=1, padx=(0, 20), pady=20)
 
-        self.theme_box = gui.CTkComboBox(self.side_panel_frame, values=['dark', 'light'], command=self.select_theme_cb)
+        self.theme_box = gui.CTkOptionMenu(self.side_panel_frame, values=['dark', 'light'], command=self.select_theme_cb)
         self.theme_box.grid(row=1, column=0, padx=20, pady=(0, 20))
 
-        self.generate_suggestions_check = gui.CTkCheckBox(self.side_panel_frame, text='generate suggestions', command=self.select_gen_suggestions)
+        self.generate_suggestions_check = gui.CTkSwitch(self.side_panel_frame, text='generate suggestions', command=self.select_gen_suggestions)
         self.generate_suggestions_check.select()
 
         if not self.settings['generate suggestions']:
@@ -146,7 +166,7 @@ class ChatLLM(gui.CTk):
         self.chat_entries[-1].insert('0.0', msg)
         self.chat_entries[-1].configure(state='disabled')
 
-        height = 28 + 20 * (len(msg) // 72 + msg.count('\n'))
+        height = 28 + 18 * len(str_chunks(msg, 60))
 
         if self.chat_entries[-1].cget('height') != height:
             self.chat_entries[-1].configure(height=height)
@@ -156,13 +176,13 @@ class ChatLLM(gui.CTk):
     def add_chat_entry(self, entry):
         self.suggestions_frame.grid_remove()
 
-        height = 28 + 20 * (len(entry['msg']) // 72 + entry['msg'].count('\n'))
-        tmp = gui.CTkTextbox(self.chat_frame, height=height)
+        height = 28 + 18 * len(str_chunks(entry['msg'], 60))
+        tmp = gui.CTkTextbox(self.chat_frame, height=height, corner_radius=15)
 
         tmp.insert('0.0', entry['msg'])
         tmp.configure(state='disabled')
 
-        tmp.grid(row=len(self.chat_entries), column=1 if entry['who'] == 'user' else 0, padx=10, pady=10, sticky='wen')
+        tmp.grid(row=len(self.chat_entries), column=1 if entry['who'] == 'user' else 0, padx=10, pady=(10, 0), sticky='wen')
 
         self.chat_entries.append(tmp)
         self.update()
@@ -204,6 +224,7 @@ class ChatLLM(gui.CTk):
             self.update_last_chat_entry(self.chat[-1])
 
         self.answering = False
+
 
 # settings
 settings = json.load(open('settings.json', 'r'))
