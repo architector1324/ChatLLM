@@ -50,6 +50,7 @@ def main(page: ft.Page):
         prompt_go.disabled = False
         page.snack_bar = ft.SnackBar(content=ft.Text(model_box.value), duration=1000)
         page.snack_bar.open = True
+        page.update()
 
         if chat:
             return
@@ -88,10 +89,33 @@ def main(page: ft.Page):
 
 
     def prompt_go_clicked(_e):
-        answering = True
+        nonlocal answering
+
+        def stop():
+            nonlocal answering
+
+            answering = False
+            prompt_go.color = ft.colors.INDIGO_200
+            prompt_go.bgcolor = None
+            prompt_go.text = 'Go'
+            page.update()
+
+        if answering:
+            stop()
+            return
 
         prompt = prompt_entry.value
         prompt_entry.value = None
+
+        if not prompt:
+            return
+
+        answering = True
+        page.controls[1].content = chat_entries
+
+        prompt_go.color = ft.colors.WHITE
+        prompt_go.bgcolor = ft.colors.RED
+        prompt_go.text = 'Stop'
 
         context = chat[-1]['ctx'] if chat else None
 
@@ -107,7 +131,7 @@ def main(page: ft.Page):
             chat[-1]['ctx'] = t['context'] if t['done'] else chat[-1]['ctx']
             chat_update_entry(len(chat) - 1, chat[-1])
 
-        answering = False
+        stop()
 
 
     # app
