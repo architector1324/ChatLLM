@@ -22,11 +22,11 @@ class Model:
         res = ollama.generate(model=self.name, prompt=Model.PROMPTS_SUGGESTION[self.lang])['response']
         return json.loads(res)
 
-    def prompt(self, prompt):
-        return ollama.generate(model=self.name, prompt=prompt)['response']
+    def prompt(self, prompt, context):
+        return ollama.generate(model=self.name, prompt=prompt, context=context)['response']
 
-    def prompt_stream(self, prompt):
-        return ollama.generate(model=self.name, prompt=prompt, stream=True)
+    def prompt_stream(self, prompt, context):
+        return ollama.generate(model=self.name, prompt=prompt, context=context, stream=True)
 
 
 def main(page: ft.Page):
@@ -38,11 +38,10 @@ def main(page: ft.Page):
 
     model = None
 
-    # handlers
-    def prompt_go_clicked(_e):
-        print(model)
-        pass
+    chat = []
+    answering = False
 
+    # handlers
     def model_selected(_e):
         model_load.disabled = False
         page.update()
@@ -52,10 +51,47 @@ def main(page: ft.Page):
         model = Model(model_box.value, settings['lang'])
 
         prompt_go.disabled = False
-        page.snack_bar = ft.SnackBar(content=ft.Text(model_box.value))
+        page.snack_bar = ft.SnackBar(content=ft.Text(model_box.value), duration=1000)
         page.snack_bar.open = True
 
         page.update()
+
+    def chat_add_entry(entry):
+        chat.append(entry)
+
+        entry_body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_WEB, on_tap_link=lambda e: page.launch_url(e.data))
+        column = ft.Column([ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER), entry_body])
+    
+        container = ft.Container(content=column, bgcolor=ft.colors.GREY_800, border_radius=ft.border_radius.all(10), padding=10)
+
+        chat_entries.controls.append(container)
+        page.update()
+
+    def chat_update_entry(i, entry):
+        chat_entries.controls[i].content.controls[1].value = entry['msg']
+        page.update()
+
+    def prompt_go_clicked(_e):
+        answering = True
+
+        prompt = prompt_entry.value
+        prompt_entry.value = None
+
+        context = chat[-1]['ctx'] if chat else None
+
+        chat_add_entry({'who': 'user', 'msg': prompt, 'ctx': context})
+        chat_add_entry({'who': 'ai', 'msg': '', 'ctx': context})
+
+        stream = model.prompt_stream(prompt, context)
+        for t in stream:
+            if not answering:
+                stream.close()
+                break
+            chat[-1]['msg'] += t['response']
+            chat[-1]['ctx'] = t['context'] if t['done'] else chat[-1]['ctx']
+            chat_update_entry(len(chat) - 1, chat[-1])
+
+        answering = False
 
 
     # app
@@ -66,15 +102,13 @@ def main(page: ft.Page):
     prompt_entry = ft.TextField(value='', label='prompt', multiline=True, hint_text=random.choice(topics[settings['lang']])['prompt'], expand=True)
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True)
 
-    chat_entries = ft.ListView(expand=True)
+    chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
 
     page.add(
         ft.Row([
             model_box,
             model_load,
-            gen_suggestions_check,
-            ft.IconButton(ft.icons.ABC),
-            ft.Icon(ft.icons.ACCOUNT_BOX)
+            gen_suggestions_check
         ]),
         ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.GREY_900, expand=True),
         ft.Row([prompt_entry, prompt_go])
