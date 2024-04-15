@@ -100,7 +100,7 @@ def main(page: ft.Page):
             prompt_go.text = 'Go'
             page.update()
 
-        if answering:
+        if answering or not model:
             stop()
             return
 
@@ -139,7 +139,7 @@ def main(page: ft.Page):
     model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
     theme_switch = ft.Switch(label='light', on_change=theme_switched)
 
-    prompt_entry = ft.TextField(value='', label='prompt', multiline=True, hint_text=random.choice(topics[settings['lang']])['prompt'], expand=True)
+    prompt_entry = ft.TextField(value='', label='prompt', hint_text=random.choice(topics[settings['lang']])['prompt'], multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked)
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
