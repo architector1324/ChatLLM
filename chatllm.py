@@ -27,6 +27,7 @@ def main(page: ft.Page):
 
     page.title = 'ChatLLM'
     page.theme_mode = settings['theme']
+    page.theme = ft.Theme(color_scheme_seed=settings['color'])
 
     model = None
 
@@ -77,7 +78,7 @@ def main(page: ft.Page):
         entry_body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_WEB, on_tap_link=lambda e: page.launch_url(e.data))
         column = ft.Column([ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER), entry_body])
     
-        container = ft.Container(content=column, bgcolor=ft.colors.GREY_800, border_radius=ft.border_radius.all(10), padding=10)
+        container = ft.Container(content=column, bgcolor=ft.colors.SURFACE_VARIANT, border_radius=ft.border_radius.all(10), padding=10)
 
         chat_entries.controls.append(container)
         page.update()
@@ -95,8 +96,8 @@ def main(page: ft.Page):
             nonlocal answering
 
             answering = False
-            prompt_go.color = ft.colors.INDIGO_200
-            prompt_go.bgcolor = None
+            prompt_go.color = ft.colors.PRIMARY
+            prompt_go.bgcolor = ft.colors.ON_INVERSE_SURFACE
             prompt_go.text = 'Go'
             page.update()
 
@@ -114,7 +115,7 @@ def main(page: ft.Page):
         page.controls[1].content = chat_entries
 
         prompt_go.color = ft.colors.WHITE
-        prompt_go.bgcolor = ft.colors.RED
+        prompt_go.bgcolor = ft.colors.ERROR_CONTAINER
         prompt_go.text = 'Stop'
 
         context = chat[-1]['ctx'] if chat else None
@@ -136,18 +137,18 @@ def main(page: ft.Page):
 
     # app
     model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_selected)
-    model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
+    model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=False)
     theme_switch = ft.Switch(label='light', on_change=theme_switched)
 
     prompt_entry = ft.TextField(value='', label='prompt', hint_text=random.choice(topics[settings['lang']])['prompt'], multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked)
-    prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True)
+    prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=False, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
 
     prompt_suggestions_containers = [
         ft.Container(
             content=ft.Text(prompt_suggestions[i]['prompt']),
-            bgcolor=ft.colors.GREY_800,
+            bgcolor=ft.colors.SURFACE_VARIANT,
             border_radius=ft.border_radius.all(10),
             padding=10,
             alignment=ft.alignment.center,
@@ -167,7 +168,7 @@ def main(page: ft.Page):
             model_load,
             theme_switch
         ]),
-        ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.GREY_900, expand=True),
+        ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.ON_INVERSE_SURFACE, expand=True),
         ft.Row([prompt_entry, prompt_go])
     )
 
