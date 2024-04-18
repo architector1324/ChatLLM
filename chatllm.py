@@ -75,7 +75,7 @@ def main(page: ft.Page):
     def chat_add_entry(entry):
         chat.append(entry)
 
-        entry_body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_WEB, on_tap_link=lambda e: page.launch_url(e.data))
+        entry_body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
         column = ft.Column([ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER), entry_body])
     
         container = ft.Container(content=column, bgcolor=ft.colors.SURFACE_VARIANT, border_radius=ft.border_radius.all(10), padding=10)
@@ -137,11 +137,11 @@ def main(page: ft.Page):
 
     # app
     model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_selected)
-    model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=False)
+    model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
     theme_switch = ft.Switch(label='light', on_change=theme_switched)
 
     prompt_entry = ft.TextField(value='', label='prompt', hint_text=random.choice(topics[settings['lang']])['prompt'], multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked)
-    prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=False, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
+    prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
 
