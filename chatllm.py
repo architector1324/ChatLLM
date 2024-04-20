@@ -2,6 +2,7 @@ import json
 import random
 
 import ollama
+import datetime
 import pyperclip
 import flet as ft
 
@@ -96,10 +97,11 @@ def main(page: ft.Page):
 
 
     def chat_to_str():
-        out = ''
-        for e in chat:
-            out += f"{e['who']}:\n{e['msg']}\n\n"
-        return out
+        if chat_format.value == 'md':
+            return '\n'.join([f"{e['who']}:\n{e['msg']}\n" for e in chat])
+
+        return json.dumps(chat, ensure_ascii=False)
+
 
     def chat_update_entry(i, entry):
         chat_entries.controls[i].content.controls[1].value = entry['msg']
@@ -140,6 +142,11 @@ def main(page: ft.Page):
             f.write(chat_to_str())
 
 
+    def prompt_focus(_):
+        prompt_entry.hint_text = hint_text=random.choice(topics[settings['lang']])['prompt']
+        page.update()
+
+
     def prompt_go_clicked(_):
         nonlocal answering
 
@@ -165,7 +172,7 @@ def main(page: ft.Page):
 
         answering = True
         page.controls[2].content = chat_entries
-        page.controls[1].controls = [save_chat, copy_chat, clear_chat, clear_context]
+        page.controls[1].controls = [chat_format, save_chat, copy_chat, clear_chat, clear_context]
         page.controls[1].disabled = True
 
         prompt_go.color = ft.colors.WHITE
@@ -174,8 +181,8 @@ def main(page: ft.Page):
 
         context = chat[-1]['ctx'] if chat else None
 
-        chat_add_entry({'who': 'user', 'msg': prompt, 'ctx': context})
-        chat_add_entry({'who': 'assistant', 'msg': '', 'ctx': context})
+        chat_add_entry({'who': 'user', 'msg': prompt, 'ctx': context, 'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+        chat_add_entry({'who': 'assistant', 'msg': '', 'ctx': context, 'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
         stream = model.prompt_stream(prompt, context)
         for t in stream:
@@ -194,10 +201,12 @@ def main(page: ft.Page):
     model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
     theme_switch = ft.Switch(label='light', on_change=theme_switched)
 
-    prompt_entry = ft.TextField(value='', label='prompt', hint_text=random.choice(topics[settings['lang']])['prompt'], multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked)
+    prompt_entry = ft.TextField(value='', label='prompt', multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked, on_focus=prompt_focus)
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
     save_chat_dialog = ft.FilePicker(on_result=save_chat_click)
+
+    chat_format = ft.Dropdown(label='format', width=80, value='md', options=[ft.dropdown.Option('md'), ft.dropdown.Option('json')])
     save_chat = ft.ElevatedButton(text='Save', on_click=lambda _: save_chat_dialog.save_file())
     copy_chat = ft.ElevatedButton(text='Copy', on_click=copy_chat_click)
 
