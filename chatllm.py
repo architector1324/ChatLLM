@@ -38,12 +38,12 @@ def main(page: ft.Page):
     prompt_suggestions = random.sample(topics[settings['lang']], 4)
 
     # handlers
-    def model_selected(_e):
+    def model_selected(_):
         model_load.disabled = False
         page.update()
 
 
-    def model_load_clicked(_e):
+    def model_load_clicked(_):
         nonlocal model
         nonlocal prompt_suggestions
 
@@ -61,7 +61,7 @@ def main(page: ft.Page):
         page.update()
 
 
-    def theme_switched(_e):
+    def theme_switched(_):
         settings['theme'] = 'dark' if theme_switch.value == 0 else 'light'
         page.theme_mode = settings['theme']
         page.update()
@@ -83,7 +83,7 @@ def main(page: ft.Page):
         body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
         panel = ft.Row([
             ft.Icon(ft.icons.ACCOUNT_CIRCLE, ft.alignment.center_right) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER, ft.alignment.center_right),
-            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _e,i=len(chat)-1: chat_entry_copy_click(i), alignment=ft.alignment.center_right)
+            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: chat_entry_copy_click(i), alignment=ft.alignment.center_right)
         ])
         column = ft.Column([panel, body])
 
@@ -93,12 +93,18 @@ def main(page: ft.Page):
         page.update()
 
 
+    def chat_to_str():
+        out = ''
+        for e in chat:
+            out += f"{e['who']}:\n{e['msg']}\n\n"
+        return out
+
     def chat_update_entry(i, entry):
         chat_entries.controls[i].content.controls[1].value = entry['msg']
         page.update()
 
 
-    def clear_chat_clicked(_e):
+    def clear_chat_clicked(_):
         chat.clear()
         chat_entries.controls.clear()
         page.controls[1].controls.clear()
@@ -106,14 +112,30 @@ def main(page: ft.Page):
         page.update()
 
 
-    def clear_context_clicked(_e):
+    def clear_context_clicked(_):
         chat[-1]['ctx'] = None
         page.snack_bar = ft.SnackBar(content=ft.Text('Context cleared'), duration=1000)
         page.snack_bar.open = True
         page.update()
 
 
-    def prompt_go_clicked(_e):
+    def copy_chat_click(_):
+        pyperclip.copy(chat_to_str())
+
+        page.snack_bar = ft.SnackBar(content=ft.Text('Chat copied'), duration=1000)
+        page.snack_bar.open = True
+        page.update()
+
+
+    def save_chat_click(e: ft.FilePickerResultEvent):
+        if not e.path:
+            return
+
+        with open(e.path, 'w') as f:
+            f.write(chat_to_str())
+
+
+    def prompt_go_clicked(_):
         nonlocal answering
 
         def stop():
@@ -123,6 +145,7 @@ def main(page: ft.Page):
             prompt_go.color = ft.colors.PRIMARY
             prompt_go.bgcolor = ft.colors.ON_INVERSE_SURFACE
             prompt_go.text = 'Go'
+            page.controls[1].disabled = False
             page.update()
 
         if answering or not model:
@@ -137,7 +160,8 @@ def main(page: ft.Page):
 
         answering = True
         page.controls[2].content = chat_entries
-        page.controls[1].controls = [clear_chat, clear_context]
+        page.controls[1].controls = [save_chat, copy_chat, clear_chat, clear_context]
+        page.controls[1].disabled = True
 
         prompt_go.color = ft.colors.WHITE
         prompt_go.bgcolor = ft.colors.ERROR_CONTAINER
@@ -146,7 +170,7 @@ def main(page: ft.Page):
         context = chat[-1]['ctx'] if chat else None
 
         chat_add_entry({'who': 'user', 'msg': prompt, 'ctx': context})
-        chat_add_entry({'who': 'ai', 'msg': '', 'ctx': context})
+        chat_add_entry({'who': 'assistant', 'msg': '', 'ctx': context})
 
         stream = model.prompt_stream(prompt, context)
         for t in stream:
@@ -168,7 +192,11 @@ def main(page: ft.Page):
     prompt_entry = ft.TextField(value='', label='prompt', hint_text=random.choice(topics[settings['lang']])['prompt'], multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked)
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
-    clear_chat = ft.ElevatedButton(text='Clear chat', on_click=clear_chat_clicked)
+    save_chat_dialog = ft.FilePicker(on_result=save_chat_click)
+    save_chat = ft.ElevatedButton(text='Save', on_click=lambda _: save_chat_dialog.save_file())
+    copy_chat = ft.ElevatedButton(text='Copy', on_click=copy_chat_click)
+
+    clear_chat = ft.ElevatedButton(text='Clear', on_click=clear_chat_clicked)
     clear_context = ft.ElevatedButton(text='Clear context', on_click=clear_context_clicked)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
@@ -181,7 +209,7 @@ def main(page: ft.Page):
             padding=10,
             alignment=ft.alignment.center,
             expand=True,
-            on_click=lambda e, i=i: prompt_suggestion_click(i)
+            on_click=lambda _, i=i: prompt_suggestion_click(i)
         ) for i in range(4)
     ]
 
@@ -189,6 +217,8 @@ def main(page: ft.Page):
         ft.Row([prompt_suggestions_containers[0], prompt_suggestions_containers[1]], expand=True),
         ft.Row([prompt_suggestions_containers[2], prompt_suggestions_containers[3]], expand=True)
     ], expand=True)
+
+    page.overlay.append(save_chat_dialog)
 
     page.add(
         ft.Row([
