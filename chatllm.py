@@ -4,6 +4,7 @@ import random
 import ollama
 import datetime
 import pyperclip
+
 import flet as ft
 
 
@@ -11,7 +12,7 @@ class Model:
     def get_models():
         try:
             return [m['name'] for m in ollama.list()['models']]
-        except:
+        except ollama.ResponseError:
             return ['none']
 
     def __init__(self, name, lang='en'):
@@ -27,8 +28,8 @@ class Model:
 
 def main(page: ft.Page):
     # settings
-    settings = json.load(open('settings.json', 'r'))
-    topics = json.load(open('topics.json', 'r'))
+    settings = json.load(open('settings.json', 'r', encoding='utf-8'))
+    topics = json.load(open('topics.json', 'r', encoding='utf-8'))
 
     page.title = 'ChatLLM'
     page.theme_mode = settings['theme']
@@ -86,18 +87,18 @@ def main(page: ft.Page):
 
 
     def chat_entry_reply_click(i):
-        prompt_entry.value = '\n'.join([f'> {m}' for m in chat[i]['msg'].split('\n')])
+        prompt_entry.value = '\n'.join([f'> {m}' for m in chat[i]['content'].split('\n')])
         page.update()
 
 
     def chat_add_entry(entry):
         chat.append(entry)
 
-        body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
-        icon = ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER)
+        body = ft.Markdown(entry['content'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
+        icon = ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['role'] == 'user' else ft.Icon(ft.icons.COMPUTER)
         panel = ft.Row([
             ft.IconButton(icon=ft.icons.REPLY_ROUNDED, on_click=lambda _, i=len(chat)-1: chat_entry_reply_click(i)),
-            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: pyperclip.copy(chat[i]['msg']))
+            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: pyperclip.copy(chat[i]['content']))
         ])
         column = ft.Column([icon, body, panel])
 
@@ -109,13 +110,13 @@ def main(page: ft.Page):
 
     def chat_to_str(in_json=False):
         if not in_json:
-            return '\n'.join([f"{e['who']}:\n{e['msg']}\n" for e in chat])
+            return '\n'.join([f"{e['role']}:\n{e['content']}\n" for e in chat])
 
         return json.dumps(chat, ensure_ascii=False)
 
 
     def chat_update_entry(i, entry):
-        chat_entries.controls[i].content.controls[1].value = entry['msg']
+        chat_entries.controls[i].content.controls[1].value = entry['content']
         page.update()
 
 
@@ -132,7 +133,7 @@ def main(page: ft.Page):
         if not chat:
             return
 
-        chat[-1]['ctx'] = None
+        chat[-1]['context'] = None
         page.snack_bar = ft.SnackBar(content=ft.Text('Context cleared'), duration=1000)
         page.snack_bar.open = True
         page.update()
@@ -150,7 +151,7 @@ def main(page: ft.Page):
         if not e.path:
             return
 
-        with open(e.path, 'w') as f:
+        with open(e.path, 'w', encoding='utf-8') as f:
             page.snack_bar = ft.SnackBar(content=ft.Text(f'Chat saved: {e.path}'), duration=1000)
             page.snack_bar.open = True
             page.update()
@@ -158,7 +159,7 @@ def main(page: ft.Page):
 
 
     def prompt_focus(_):
-        prompt_entry.hint_text = hint_text=random.choice(topics[settings['lang']])['prompt']
+        prompt_entry.hint_text = random.choice(topics[settings['lang']])['prompt']
         page.update()
 
 
@@ -194,18 +195,18 @@ def main(page: ft.Page):
         prompt_go.bgcolor = ft.colors.ERROR_CONTAINER
         prompt_go.text = 'Stop'
 
-        context = chat[-1]['ctx'] if chat else None
+        context = chat[-1]['context'] if chat else None
 
-        chat_add_entry({'who': 'user', 'msg': prompt, 'ctx': context, 'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
-        chat_add_entry({'who': 'assistant', 'msg': '', 'ctx': context, 'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+        chat_add_entry({'role': 'user', 'content': prompt, 'context': context, 'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+        chat_add_entry({'role': 'assistant', 'content': '', 'context': context, 'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
         stream = model.prompt_stream(prompt, context)
         for t in stream:
             if not answering:
                 stream.close()
                 break
-            chat[-1]['msg'] += t['response']
-            chat[-1]['ctx'] = t['context'] if t['done'] else chat[-1]['ctx']
+            chat[-1]['content'] += t['response']
+            chat[-1]['context'] = t['context'] if t['done'] else chat[-1]['context']
             chat_update_entry(len(chat) - 1, chat[-1])
 
         stop()
@@ -276,4 +277,4 @@ def main(page: ft.Page):
     )
 
 
-app = ft.app(target=main)
+ft.app(target=main)
