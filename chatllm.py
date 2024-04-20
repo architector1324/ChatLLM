@@ -226,13 +226,20 @@ def main(page: ft.Page):
     clear_chat = ft.IconButton(icon=ft.icons.DELETE_ROUNDED, tooltip='Clear chat', on_click=clear_chat_clicked)
     clear_context = ft.IconButton(icon=ft.icons.INSERT_DRIVE_FILE_ROUNDED, tooltip='Clear context', on_click=clear_context_clicked)
 
-    chat_control = ft.Container(
-        content=ft.Row([
+    # chat_control = ft.Container(
+    #     content=ft.Row([
+    #         save_chat,
+    #         copy_chat,
+    #         clear_chat,
+    #         clear_context,
+    #     ], alignment=ft.MainAxisAlignment.CENTER), alignment=ft.alignment.bottom_center, disabled=True)
+    
+    chat_control = ft.Row([
             save_chat,
             copy_chat,
             clear_chat,
             clear_context,
-        ], alignment=ft.MainAxisAlignment.CENTER), alignment=ft.alignment.bottom_center, disabled=True)
+        ], alignment=ft.MainAxisAlignment.CENTER, disabled=True)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
     chat_container = ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.ON_INVERSE_SURFACE, expand=True)
