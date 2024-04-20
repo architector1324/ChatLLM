@@ -56,7 +56,7 @@ def main(page: ft.Page):
         if chat:
             return
 
-        page.controls[1].content = prompt_suggestions_grid
+        page.controls[2].content = prompt_suggestions_grid
         page.update()
 
 
@@ -68,7 +68,7 @@ def main(page: ft.Page):
 
     def prompt_suggestion_click(i):
         prompt_entry.value = prompt_suggestions[i]['prompt']
-        page.controls[1].content = chat_entries
+        page.controls[2].content = chat_entries
         page.update()
 
 
@@ -86,6 +86,21 @@ def main(page: ft.Page):
 
     def chat_update_entry(i, entry):
         chat_entries.controls[i].content.controls[1].value = entry['msg']
+        page.update()
+
+
+    def clear_chat_clicked(_e):
+        chat.clear()
+        chat_entries.controls.clear()
+        page.controls[1].controls.clear()
+        page.controls[2].content = prompt_suggestions_grid
+        page.update()
+
+
+    def clear_context_clicked(_e):
+        chat[-1]['ctx'] = None
+        page.snack_bar = ft.SnackBar(content=ft.Text('Context cleared'), duration=1000)
+        page.snack_bar.open = True
         page.update()
 
 
@@ -112,7 +127,8 @@ def main(page: ft.Page):
             return
 
         answering = True
-        page.controls[1].content = chat_entries
+        page.controls[2].content = chat_entries
+        page.controls[1].controls = [clear_chat, clear_context]
 
         prompt_go.color = ft.colors.WHITE
         prompt_go.bgcolor = ft.colors.ERROR_CONTAINER
@@ -143,6 +159,9 @@ def main(page: ft.Page):
     prompt_entry = ft.TextField(value='', label='prompt', hint_text=random.choice(topics[settings['lang']])['prompt'], multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked)
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
+    clear_chat = ft.ElevatedButton(text='Clear chat', on_click=clear_chat_clicked)
+    clear_context = ft.ElevatedButton(text='Clear context', on_click=clear_context_clicked)
+
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
 
     prompt_suggestions_containers = [
@@ -168,6 +187,7 @@ def main(page: ft.Page):
             model_load,
             theme_switch
         ]),
+        ft.Row([]),
         ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.ON_INVERSE_SURFACE, expand=True),
         ft.Row([prompt_entry, prompt_go])
     )
