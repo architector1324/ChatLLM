@@ -9,7 +9,10 @@ import flet as ft
 
 class Model:
     def get_models():
-        return [m['name'] for m in ollama.list()['models']]
+        try:
+            return [m['name'] for m in ollama.list()['models']]
+        except:
+            return ['none']
 
     def __init__(self, name, lang='en'):
         self.name = name
@@ -44,6 +47,11 @@ def main(page: ft.Page):
         page.update()
 
 
+    def models_update(_):
+        model_box.options = [ft.dropdown.Option(m) for m in Model.get_models()]
+        page.update()
+
+
     def model_load_clicked(_):
         nonlocal model
         nonlocal prompt_suggestions
@@ -58,8 +66,9 @@ def main(page: ft.Page):
         if chat:
             return
 
-        chat_stack.controls.append(prompt_suggestions_grid)
-        page.update()
+        if prompt_suggestions_grid not in chat_stack.controls:
+            chat_stack.controls.append(prompt_suggestions_grid)
+            page.update()
 
 
     def theme_switched(_):
@@ -113,7 +122,9 @@ def main(page: ft.Page):
     def clear_chat_clicked(_):
         chat.clear()
         chat_entries.controls.clear()
-        chat_stack.controls.append(prompt_suggestions_grid)
+
+        if prompt_suggestions_grid not in chat_stack.controls:
+            chat_stack.controls.append(prompt_suggestions_grid)
         page.update()
 
 
@@ -201,7 +212,7 @@ def main(page: ft.Page):
 
 
     # app
-    model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_selected)
+    model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_selected, on_click=models_update)
     model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
     theme_switch = ft.Switch(thumb_icon=ft.icons.LIGHT_MODE_ROUNDED, on_change=theme_switched)
 
@@ -209,8 +220,6 @@ def main(page: ft.Page):
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
     save_chat_dialog = ft.FilePicker(on_result=save_chat_click)
-
-    chat_format = ft.Switch(label='json')
 
     save_chat = ft.IconButton(icon=ft.icons.SAVE_ALT_ROUNDED, tooltip='Save chat', on_click=lambda _: save_chat_dialog.save_file())
     copy_chat = ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, tooltip='Copy chat', on_click=copy_chat_click)
