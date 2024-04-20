@@ -1,8 +1,9 @@
 import json
 import random
 
-import flet as ft
 import ollama
+import pyperclip
+import flet as ft
 
 
 class Model:
@@ -72,12 +73,20 @@ def main(page: ft.Page):
         page.update()
 
 
+    def chat_entry_copy_click(i):
+        pyperclip.copy(chat[i]['msg'])
+
+
     def chat_add_entry(entry):
         chat.append(entry)
 
-        entry_body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
-        column = ft.Column([ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER), entry_body])
-    
+        body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
+        panel = ft.Row([
+            ft.Icon(ft.icons.ACCOUNT_CIRCLE, ft.alignment.center_right) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER, ft.alignment.center_right),
+            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _e,i=len(chat)-1: chat_entry_copy_click(i), alignment=ft.alignment.center_right)
+        ])
+        column = ft.Column([panel, body])
+
         container = ft.Container(content=column, bgcolor=ft.colors.SURFACE_VARIANT, border_radius=ft.border_radius.all(10), padding=10)
 
         chat_entries.controls.append(container)
