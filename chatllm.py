@@ -58,7 +58,7 @@ def main(page: ft.Page):
         if chat:
             return
 
-        page.controls[2].content = prompt_suggestions_grid
+        chat_stack.controls.append(prompt_suggestions_grid)
         page.update()
 
 
@@ -70,7 +70,9 @@ def main(page: ft.Page):
 
     def prompt_suggestion_click(i):
         prompt_entry.value = prompt_suggestions[i]['prompt']
-        page.controls[2].content = chat_entries
+
+        if prompt_suggestions_grid in chat_stack.controls:
+            chat_stack.controls.remove(prompt_suggestions_grid)
         page.update()
 
 
@@ -96,8 +98,8 @@ def main(page: ft.Page):
         page.update()
 
 
-    def chat_to_str():
-        if chat_format.value == 'md':
+    def chat_to_str(in_json=False):
+        if not in_json:
             return '\n'.join([f"{e['who']}:\n{e['msg']}\n" for e in chat])
 
         return json.dumps(chat, ensure_ascii=False)
@@ -111,12 +113,14 @@ def main(page: ft.Page):
     def clear_chat_clicked(_):
         chat.clear()
         chat_entries.controls.clear()
-        page.controls[1].controls.clear()
-        page.controls[2].content = prompt_suggestions_grid
+        chat_stack.controls.append(prompt_suggestions_grid)
         page.update()
 
 
     def clear_context_clicked(_):
+        if not chat:
+            return
+
         chat[-1]['ctx'] = None
         page.snack_bar = ft.SnackBar(content=ft.Text('Context cleared'), duration=1000)
         page.snack_bar.open = True
@@ -157,7 +161,7 @@ def main(page: ft.Page):
             prompt_go.color = ft.colors.PRIMARY
             prompt_go.bgcolor = ft.colors.ON_INVERSE_SURFACE
             prompt_go.text = 'Go'
-            page.controls[1].disabled = False
+            chat_control.disabled = False
             page.update()
 
         if answering or not model:
@@ -171,9 +175,9 @@ def main(page: ft.Page):
             return
 
         answering = True
-        page.controls[2].content = chat_entries
-        page.controls[1].controls = [chat_format, save_chat, copy_chat, clear_chat, clear_context]
-        page.controls[1].disabled = True
+        if prompt_suggestions_grid in chat_stack.controls:
+            chat_stack.controls.remove(prompt_suggestions_grid)
+        chat_control.disabled = True
 
         prompt_go.color = ft.colors.WHITE
         prompt_go.bgcolor = ft.colors.ERROR_CONTAINER
@@ -199,21 +203,30 @@ def main(page: ft.Page):
     # app
     model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_selected)
     model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
-    theme_switch = ft.Switch(label='light', on_change=theme_switched)
+    theme_switch = ft.Switch(thumb_icon=ft.icons.LIGHT_MODE_ROUNDED, on_change=theme_switched)
 
     prompt_entry = ft.TextField(value='', label='prompt', multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked, on_focus=prompt_focus)
     prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
 
     save_chat_dialog = ft.FilePicker(on_result=save_chat_click)
 
-    chat_format = ft.Dropdown(label='format', width=80, value='md', options=[ft.dropdown.Option('md'), ft.dropdown.Option('json')])
-    save_chat = ft.ElevatedButton(text='Save', on_click=lambda _: save_chat_dialog.save_file())
-    copy_chat = ft.ElevatedButton(text='Copy', on_click=copy_chat_click)
+    chat_format = ft.Switch(label='json')
 
-    clear_chat = ft.ElevatedButton(text='Clear', on_click=clear_chat_clicked)
-    clear_context = ft.ElevatedButton(text='Clear context', on_click=clear_context_clicked)
+    save_chat = ft.IconButton(icon=ft.icons.SAVE_ALT_ROUNDED, tooltip='Save chat', on_click=lambda _: save_chat_dialog.save_file())
+    copy_chat = ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, tooltip='Copy chat', on_click=copy_chat_click)
+    clear_chat = ft.IconButton(icon=ft.icons.DELETE_ROUNDED, tooltip='Clear chat', on_click=clear_chat_clicked)
+    clear_context = ft.IconButton(icon=ft.icons.INSERT_DRIVE_FILE_ROUNDED, tooltip='Clear context', on_click=clear_context_clicked)
+
+    chat_control = ft.Container(
+        content=ft.Row([
+            save_chat,
+            copy_chat,
+            clear_chat,
+            clear_context,
+        ], alignment=ft.MainAxisAlignment.CENTER), alignment=ft.alignment.bottom_center, disabled=True)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
+    chat_container = ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.ON_INVERSE_SURFACE, expand=True)
 
     prompt_suggestions_containers = [
         ft.Container(
@@ -232,16 +245,17 @@ def main(page: ft.Page):
         ft.Row([prompt_suggestions_containers[2], prompt_suggestions_containers[3]], expand=True)
     ], expand=True)
 
+    chat_stack = ft.Stack([chat_container, chat_control], expand=True)
+
     page.overlay.append(save_chat_dialog)
 
     page.add(
         ft.Row([
             model_box,
             model_load,
-            theme_switch
+            ft.Container(content=ft.Column([theme_switch], expand=True), alignment=ft.alignment.center_right, expand=True)
         ]),
-        ft.Row([]),
-        ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.ON_INVERSE_SURFACE, expand=True),
+        chat_stack,
         ft.Row([prompt_entry, prompt_go])
     )
 
