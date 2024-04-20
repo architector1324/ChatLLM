@@ -73,19 +73,21 @@ def main(page: ft.Page):
         page.update()
 
 
-    def chat_entry_copy_click(i):
-        pyperclip.copy(chat[i]['msg'])
+    def chat_entry_reply_click(i):
+        prompt_entry.value = '\n'.join([f'> {m}' for m in chat[i]['msg'].split('\n')])
+        page.update()
 
 
     def chat_add_entry(entry):
         chat.append(entry)
 
         body = ft.Markdown(entry['msg'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
+        icon = ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER)
         panel = ft.Row([
-            ft.Icon(ft.icons.ACCOUNT_CIRCLE, ft.alignment.center_right) if entry['who'] == 'user' else ft.Icon(ft.icons.COMPUTER, ft.alignment.center_right),
-            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: chat_entry_copy_click(i), alignment=ft.alignment.center_right)
+            ft.IconButton(icon=ft.icons.REPLY_ROUNDED, on_click=lambda _, i=len(chat)-1: chat_entry_reply_click(i)),
+            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: pyperclip.copy(chat[i]['msg']))
         ])
-        column = ft.Column([panel, body])
+        column = ft.Column([icon, body, panel])
 
         container = ft.Container(content=column, bgcolor=ft.colors.SURFACE_VARIANT, border_radius=ft.border_radius.all(10), padding=10)
 
@@ -132,6 +134,9 @@ def main(page: ft.Page):
             return
 
         with open(e.path, 'w') as f:
+            page.snack_bar = ft.SnackBar(content=ft.Text(f'Chat saved: {e.path}'), duration=1000)
+            page.snack_bar.open = True
+            page.update()
             f.write(chat_to_str())
 
 
