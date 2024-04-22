@@ -43,11 +43,6 @@ def main(page: ft.Page):
     prompt_suggestions = random.sample(topics[settings['lang']], 4)
 
     # handlers
-    def model_selected(_):
-        model_load.disabled = False
-        page.update()
-
-
     def models_update(_):
         model_box.options = [ft.dropdown.Option(m) for m in Model.get_models()]
         page.update()
@@ -213,8 +208,7 @@ def main(page: ft.Page):
 
 
     # app
-    model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_selected, on_click=models_update)
-    model_load = ft.ElevatedButton(text='Load', on_click=model_load_clicked, disabled=True)
+    model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_load_clicked, on_click=models_update)
     theme_switch = ft.Switch(thumb_icon=ft.icons.LIGHT_MODE_ROUNDED, on_change=theme_switched)
 
     prompt_entry = ft.TextField(value='', label='prompt', multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked, on_focus=prompt_focus)
@@ -269,7 +263,6 @@ def main(page: ft.Page):
     page.add(
         ft.Row([
             model_box,
-            model_load,
             ft.Container(content=ft.Column([theme_switch], expand=True), alignment=ft.alignment.center_right, expand=True)
         ]),
         chat_stack,
