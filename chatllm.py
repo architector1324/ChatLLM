@@ -1,3 +1,5 @@
+#!/bin/python
+
 import json
 import random
 
@@ -11,7 +13,7 @@ import flet as ft
 class Model:
     def get_models():
         try:
-            return [m['name'] for m in ollama.list()['models']]
+            return [m.model for m in ollama.list()['models']]
         except ollama.ResponseError:
             return ['none']
 
@@ -90,14 +92,14 @@ def main(page: ft.Page):
         chat.append(entry)
 
         body = ft.Markdown(entry['content'], selectable=True, extension_set=ft.MarkdownExtensionSet.GITHUB_FLAVORED, code_theme='atom-one-dark', code_style=ft.TextStyle(font_family="monospace"),on_tap_link=lambda e: page.launch_url(e.data))
-        icon = ft.Icon(ft.icons.ACCOUNT_CIRCLE) if entry['role'] == 'user' else ft.Icon(ft.icons.COMPUTER)
+        icon = ft.Icon(ft.Icons.ACCOUNT_CIRCLE) if entry['role'] == 'user' else ft.Icon(ft.Icons.COMPUTER)
         panel = ft.Row([
-            ft.IconButton(icon=ft.icons.REPLY_ROUNDED, on_click=lambda _, i=len(chat)-1: chat_entry_reply_click(i)),
-            ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: pyperclip.copy(chat[i]['content']))
+            ft.IconButton(icon=ft.Icons.REPLY_ROUNDED, on_click=lambda _, i=len(chat)-1: chat_entry_reply_click(i)),
+            ft.IconButton(icon=ft.Icons.CONTENT_COPY_ROUNDED, on_click=lambda _, i=len(chat)-1: pyperclip.copy(chat[i]['content']))
         ])
         column = ft.Column([icon, body, panel])
 
-        container = ft.Container(content=column, bgcolor=ft.colors.SURFACE_VARIANT, border_radius=ft.border_radius.all(10), padding=10)
+        container = ft.Container(content=column, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, border_radius=ft.border_radius.all(10), padding=10)
 
         chat_entries.controls.append(container)
         page.update()
@@ -165,8 +167,8 @@ def main(page: ft.Page):
             nonlocal answering
 
             answering = False
-            prompt_go.color = ft.colors.PRIMARY
-            prompt_go.bgcolor = ft.colors.ON_INVERSE_SURFACE
+            prompt_go.color = ft.Colors.PRIMARY
+            prompt_go.bgcolor = ft.Colors.ON_INVERSE_SURFACE
             prompt_go.text = 'Go'
             chat_control.disabled = False
             page.update()
@@ -186,8 +188,8 @@ def main(page: ft.Page):
             chat_stack.controls.remove(prompt_suggestions_grid)
         chat_control.disabled = True
 
-        prompt_go.color = ft.colors.WHITE
-        prompt_go.bgcolor = ft.colors.ERROR_CONTAINER
+        prompt_go.color = ft.Colors.WHITE
+        prompt_go.bgcolor = ft.Colors.ERROR_CONTAINER
         prompt_go.text = 'Stop'
 
         context = chat[-1]['context'] if chat else None
@@ -209,17 +211,17 @@ def main(page: ft.Page):
 
     # app
     model_box = ft.Dropdown(label='model', options=[ft.dropdown.Option(m) for m in Model.get_models()], on_change=model_load_clicked, on_click=models_update)
-    theme_switch = ft.Switch(thumb_icon=ft.icons.LIGHT_MODE_ROUNDED, on_change=theme_switched)
+    theme_switch = ft.Switch(thumb_icon=ft.Icons.LIGHT_MODE_ROUNDED, on_change=theme_switched)
 
     prompt_entry = ft.TextField(value='', label='prompt', multiline=True, shift_enter=True, expand=True, border_radius=10, on_submit=prompt_go_clicked, on_focus=prompt_focus)
-    prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.colors.ON_INVERSE_SURFACE, color=ft.colors.PRIMARY)
+    prompt_go = ft.ElevatedButton(text='Go', on_click=prompt_go_clicked, disabled=True, bgcolor=ft.Colors.ON_INVERSE_SURFACE, color=ft.Colors.PRIMARY)
 
     save_chat_dialog = ft.FilePicker(on_result=save_chat_click)
 
-    save_chat = ft.IconButton(icon=ft.icons.SAVE_ALT_ROUNDED, tooltip='Save chat', on_click=lambda _: save_chat_dialog.save_file())
-    copy_chat = ft.IconButton(icon=ft.icons.CONTENT_COPY_ROUNDED, tooltip='Copy chat', on_click=copy_chat_click)
-    clear_chat = ft.IconButton(icon=ft.icons.DELETE_ROUNDED, tooltip='Clear chat', on_click=clear_chat_clicked)
-    clear_context = ft.IconButton(icon=ft.icons.INSERT_DRIVE_FILE_ROUNDED, tooltip='Clear context', on_click=clear_context_clicked)
+    save_chat = ft.IconButton(icon=ft.Icons.SAVE_ALT_ROUNDED, tooltip='Save chat', on_click=lambda _: save_chat_dialog.save_file())
+    copy_chat = ft.IconButton(icon=ft.Icons.CONTENT_COPY_ROUNDED, tooltip='Copy chat', on_click=copy_chat_click)
+    clear_chat = ft.IconButton(icon=ft.Icons.DELETE_ROUNDED, tooltip='Clear chat', on_click=clear_chat_clicked)
+    clear_context = ft.IconButton(icon=ft.Icons.INSERT_DRIVE_FILE_ROUNDED, tooltip='Clear context', on_click=clear_context_clicked)
 
     # chat_control = ft.Container(
     #     content=ft.Row([
@@ -237,12 +239,12 @@ def main(page: ft.Page):
         ], alignment=ft.MainAxisAlignment.CENTER, disabled=True)
 
     chat_entries = ft.ListView(expand=True, auto_scroll=True, spacing=15, padding=20)
-    chat_container = ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.colors.ON_INVERSE_SURFACE, expand=True)
+    chat_container = ft.Container(content=chat_entries, border_radius=ft.border_radius.all(10), bgcolor=ft.Colors.ON_INVERSE_SURFACE, expand=True)
 
     prompt_suggestions_containers = [
         ft.Container(
             content=ft.Text(prompt_suggestions[i]['prompt']),
-            bgcolor=ft.colors.SURFACE_VARIANT,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             border_radius=ft.border_radius.all(10),
             padding=10,
             alignment=ft.alignment.center,
